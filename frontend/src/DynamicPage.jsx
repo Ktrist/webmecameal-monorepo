@@ -50,18 +50,20 @@ function BlockRenderer({ blocs, context }) {
 export default function DynamicPage() {
   const [pageData, setPageData] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const context = useOutletContext()
-  
-  const { slug } = useParams() 
+
+  const { slug } = useParams()
   const currentSlug = slug || "accueil" 
 
   useEffect(() => {
     async function fetchPageData() {
       setLoading(true)
+      setError(null)
       try {
         const query = qs.stringify({
           filters: {
-            slug: { $eq: currentSlug }, 
+            slug: { $eq: currentSlug },
           },
           populate: {
             blocs: {
@@ -69,22 +71,22 @@ export default function DynamicPage() {
                 // Hero & Grille
                 'blocs-page.hero': { populate: 'image_fond' },
                 'blocs-page.grille-menus': { populate: '*' },
-                
+
                 // Offres & Contenu
-                'blocs-page.pricing-grid': { populate: { offers: true } }, 
+                'blocs-page.pricing-grid': { populate: { offers: true } },
                 'blocs-page.content-block': { populate: 'image' },
-                
+
                 // --- CORRECTION DU NOM DU CHAMP ICI ---
-                'blocs-page.features-list': { 
+                'blocs-page.features-list': {
                   populate: { feature_item: { populate: 'icone' } } // <-- C'est 'feature_item'
                 },
-                
+
                 // Vérifiez aussi ces noms dans votre Strapi si ça plante encore :
-                'blocs-page.testimonials-grid': { 
-                  populate: { avis: { populate: 'photo' } } 
+                'blocs-page.testimonials-grid': {
+                  populate: { avis: { populate: 'photo' } }
                 },
-                'blocs-page.faq-section': { 
-                  populate: { questions: true } 
+                'blocs-page.faq-section': {
+                  populate: { questions: true }
                 }
               }
             }
@@ -92,22 +94,27 @@ export default function DynamicPage() {
         }, { encodeValuesOnly: true })
 
         const res = await fetch(`${STRAPI_URL}/api/pages?${query}`)
-        
+
         if (!res.ok) {
-           const errorDetails = await res.json();
-           console.error("ERREUR STRAPI:", errorDetails);
-           throw new Error(errorDetails.error?.message || res.statusText);
+          if (res.status === 403) {
+            setError('permissions')
+            return
+          }
+          const errorDetails = await res.json();
+          console.error("ERREUR STRAPI:", errorDetails);
+          throw new Error(errorDetails.error?.message || res.statusText);
         }
-        
+
         const json = await res.json()
-        
+
         if (json.data && json.data.length > 0) {
-          setPageData(json.data[0].attributes) 
+          setPageData(json.data[0].attributes)
         } else {
           setPageData(null)
         }
       } catch (error) {
         console.error("Erreur fetch:", error)
+        setError('fetch')
       }
       setLoading(false)
     }
@@ -115,7 +122,30 @@ export default function DynamicPage() {
   }, [currentSlug])
 
   if (loading) return <Center h="50vh"><Spinner size="xl" color="brand.green" /></Center>
-  
+
+  if (error === 'permissions') {
+    return (
+      <Center h="50vh" flexDirection="column" p={8}>
+        <Text fontSize="2xl" fontWeight="bold" mb={4} color="red.500">⚠️ Erreur de Permissions</Text>
+        <Text fontSize="lg" mb={4} textAlign="center" maxW="600px">
+          L'API Strapi n'est pas accessible publiquement. Vous devez configurer les permissions.
+        </Text>
+        <Box bg="gray.50" p={6} borderRadius="lg" maxW="700px">
+          <Text fontWeight="bold" mb={3}>🔧 Solution :</Text>
+          <Text mb={2}>1. Allez sur <strong>http://localhost:1337/admin</strong></Text>
+          <Text mb={2}>2. Settings → Roles → Public</Text>
+          <Text mb={2}>3. Activez les permissions :</Text>
+          <Text ml={4} mb={1}>• <strong>Page</strong>: find, findOne</Text>
+          <Text ml={4} mb={1}>• <strong>Global</strong>: find</Text>
+          <Text ml={4} mb={1}>• <strong>Menu</strong>: find, findOne</Text>
+          <Text ml={4} mb={1}>• <strong>Fiche-recette</strong>: find, findOne</Text>
+          <Text mt={3}>4. Cliquez sur <strong>Save</strong></Text>
+          <Text mt={3}>5. Rechargez cette page</Text>
+        </Box>
+      </Center>
+    )
+  }
+
   if (!pageData) return (
     <Center h="50vh" flexDirection="column">
       <Text fontSize="xl" fontWeight="bold" mb={2}>Page introuvable ({currentSlug})</Text>
