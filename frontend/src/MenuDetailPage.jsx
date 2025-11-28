@@ -2,14 +2,12 @@ import { useEffect, useState } from 'react'
 import { useParams, useOutletContext, useNavigate, Link as RouterLink } from 'react-router-dom'
 import { supabase } from './supabaseClient'
 import { useCart } from './CartContext'
-import { 
-  Box, Button, Container, Heading, Text, Spinner, VStack, 
+import {
+  Box, Button, Container, Heading, Text, Spinner, VStack,
   Image, Breadcrumb, BreadcrumbItem, BreadcrumbLink, useToast,
   Flex, Divider
 } from '@chakra-ui/react'
-
-// URL de votre Strapi
-const STRAPI_URL = 'http://localhost:1337'
+import { STRAPI_URL } from './config'
 
 export default function MenuDetailPage() {
   const { menuId } = useParams()

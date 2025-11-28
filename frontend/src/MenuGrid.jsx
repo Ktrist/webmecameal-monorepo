@@ -5,12 +5,12 @@ import {
   Box, Button, Container, Heading, Text, Tag,
   SimpleGrid, Image, useToast, Skeleton, Badge, VStack, Spinner
 } from '@chakra-ui/react'
-import { Link as RouterLink, useNavigate } from 'react-router-dom' 
+import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import qs from 'qs'
+import { STRAPI_URL } from './config'
 
 const MotionBox = motion(Box)
-const STRAPI_URL = 'http://localhost:1337'
 
 export default function MenuGrid({ data, context }) {
   // On récupère les données passées par le parent (peut être vide)

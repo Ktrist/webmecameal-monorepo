@@ -1,8 +1,6 @@
 import { Box, Button, Container, Heading, Text, VStack } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router-dom'
-
-// L'URL de notre Strapi, pour préfixer les images
-const STRAPI_URL = 'http://localhost:1337'
+import { STRAPI_URL } from './config'
 
 export default function Hero({ data }) {
   // data = { titre: "...", sous_titre: "...", image_fond: {...} }

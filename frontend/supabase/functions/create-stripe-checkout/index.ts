@@ -19,9 +19,12 @@ Deno.serve(async (req) => {
       throw new Error('La clé secrète Stripe (STRIPE_SECRET_KEY) est introuvable.')
     }
 
+    // URL de base de l'application (configurable via secrets Supabase)
+    const appUrl = Deno.env.get('APP_URL') || 'http://localhost:3000'
+
     const stripe = new Stripe(stripeSecretKey, {
       // Cette version d'API est stable, vous pouvez la laisser ou mettre la vôtre
-      apiVersion: '2024-04-10', 
+      apiVersion: '2024-04-10',
     })
 
     // 3. Récupération des données envoyées par React
@@ -54,9 +57,9 @@ Deno.serve(async (req) => {
       payment_method_types: ['card'],
       line_items: line_items,
       mode: 'payment',
-      // URLs de redirection
-      success_url: `http://localhost:5173/commande/succes?order_id=${orderId}`,
-      cancel_url: `http://localhost:5173/checkout`,
+      // URLs de redirection (utilise APP_URL ou localhost:3000 par défaut)
+      success_url: `${appUrl}/commande/succes?order_id=${orderId}`,
+      cancel_url: `${appUrl}/checkout`,
       metadata: {
         supabase_order_id: orderId, // Très important pour le webhook plus tard
       },

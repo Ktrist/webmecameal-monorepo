@@ -1,7 +1,6 @@
 import { Box, Container, SimpleGrid, Heading, Text, Avatar, VStack, HStack, Icon } from '@chakra-ui/react'
 import { FaStar } from 'react-icons/fa'
-
-const STRAPI_URL = 'http://localhost:1337'
+import { STRAPI_URL } from './config'
 
 export default function Testimonials({ data }) {
   const reviews = data.avis || []

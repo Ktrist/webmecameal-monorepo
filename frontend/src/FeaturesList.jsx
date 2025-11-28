@@ -1,7 +1,7 @@
 import { Box, Container, SimpleGrid, Heading, Text, VStack, Image } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
+import { STRAPI_URL } from './config'
 
-const STRAPI_URL = 'http://localhost:1337'
 const MotionBox = motion(Box)
 
 export default function FeaturesList({ data }) {

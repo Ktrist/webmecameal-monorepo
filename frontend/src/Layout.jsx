@@ -11,8 +11,7 @@ import { FiShoppingCart, FiMenu, FiUser, FiLogOut } from 'react-icons/fi'
 import { FaMinus, FaPlus, FaTrash } from 'react-icons/fa'
 import { useCart } from './CartContext'
 import { supabase } from './supabaseClient'
-
-const STRAPI_URL = 'http://localhost:1337' // Pour le fetch des liens
+import { STRAPI_URL } from './config'
 
 export default function Layout() {
   // 1. Récupération des contextes

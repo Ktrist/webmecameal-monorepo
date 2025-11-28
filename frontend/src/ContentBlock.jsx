@@ -1,7 +1,6 @@
 import { Box, Container, Heading, Text, Flex, Image, VStack } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
-
-const STRAPI_URL = 'http://localhost:1337'
+import { STRAPI_URL } from './config'
 
 export default function ContentBlock({ data }) {
   // data.inverse = true/false (défini dans Strapi pour changer le sens)

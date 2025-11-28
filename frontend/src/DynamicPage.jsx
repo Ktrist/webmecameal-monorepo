@@ -11,8 +11,7 @@ import ContentBlock from './ContentBlock'
 import FeaturesList from './FeaturesList'
 import Testimonials from './Testimonials'
 import Faq from './Faq'
-
-const STRAPI_URL = 'http://localhost:1337'
+import { STRAPI_URL } from './config'
 
 // Le Moteur de Rendu
 function BlockRenderer({ blocs, context }) {

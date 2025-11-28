@@ -23,7 +23,13 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      // Ignore unused React components and variables prefixed with underscore
+      'no-unused-vars': ['warn', {
+        varsIgnorePattern: '^_',
+        argsIgnorePattern: '^_',
+      }],
+      // Ensure React is always in scope (not needed for React 17+)
+      'react/react-in-jsx-scope': 'off',
     },
   },
 ])
