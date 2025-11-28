@@ -3,7 +3,7 @@ import { FaStar } from 'react-icons/fa'
 import { STRAPI_URL } from './config'
 
 export default function Testimonials({ data }) {
-  const reviews = data.avis || []
+  const reviews = data.testimonial_card || []
 
   return (
     <Box py={20} bg="gray.50">

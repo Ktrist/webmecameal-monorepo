@@ -76,14 +76,12 @@ export default function DynamicPage() {
                 'blocs-page.pricing-grid': { populate: { offers: true } },
                 'blocs-page.content-block': { populate: 'image' },
 
-                // --- CORRECTION DU NOM DU CHAMP ICI ---
+                // Features, Testimonials & FAQ
                 'blocs-page.features-list': {
-                  populate: { feature_item: { populate: 'icone' } } // <-- C'est 'feature_item'
+                  populate: { feature_item: { populate: 'icone' } }
                 },
-
-                // Vérifiez aussi ces noms dans votre Strapi si ça plante encore :
                 'blocs-page.testimonials-grid': {
-                  populate: { avis: { populate: 'photo' } }
+                  populate: { testimonial_card: { populate: 'photo' } }
                 },
                 'blocs-page.faq-section': {
                   populate: { questions: true }
