@@ -84,7 +84,7 @@ export default function DynamicPage() {
                   populate: { testimonial_card: { populate: 'photo' } }
                 },
                 'blocs-page.faq-section': {
-                  populate: { questions: true }
+                  populate: { faq_item: true }
                 }
               }
             }
