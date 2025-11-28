@@ -1,0 +1,32 @@
+{
+  "collectionName": "components_blocs_page_avis",
+  "info": {
+    "displayName": "avis"
+  },
+  "options": {},
+  "attributes": {
+    "nom": {
+      "type": "string"
+    },
+    "poste": {
+      "type": "string"
+    },
+    "photo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "texte": {
+      "type": "text"
+    },
+    "note": {
+      "type": "integer"
+    }
+  },
+  "config": {}
+}

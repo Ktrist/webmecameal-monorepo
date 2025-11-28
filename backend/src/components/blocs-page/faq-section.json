@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_blocs_page_faq_sections",
+  "info": {
+    "displayName": "faq_section"
+  },
+  "options": {},
+  "attributes": {
+    "titre": {
+      "type": "string"
+    },
+    "faq_item": {
+      "type": "component",
+      "component": "blocs-page.questions",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

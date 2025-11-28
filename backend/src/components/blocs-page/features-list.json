@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_blocs_page_features_lists",
+  "info": {
+    "displayName": "features_list"
+  },
+  "options": {},
+  "attributes": {
+    "titre": {
+      "type": "string"
+    },
+    "feature_item": {
+      "type": "component",
+      "component": "blocs-page.features",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

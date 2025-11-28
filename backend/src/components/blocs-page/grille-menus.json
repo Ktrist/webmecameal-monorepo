@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_blocs_page_grille_menus",
+  "info": {
+    "displayName": "grille_menus"
+  },
+  "options": {},
+  "attributes": {
+    "titre": {
+      "type": "string"
+    },
+    "fiche_recettes": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::fiche-recette.fiche-recette"
+    }
+  },
+  "config": {}
+}

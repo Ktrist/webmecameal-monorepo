@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_blocs_page_pricing_grids",
+  "info": {
+    "displayName": "pricing_grid"
+  },
+  "options": {},
+  "attributes": {
+    "titre": {
+      "type": "string"
+    },
+    "sous_titre": {
+      "type": "string"
+    },
+    "offers": {
+      "type": "component",
+      "component": "elements.offer-card",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

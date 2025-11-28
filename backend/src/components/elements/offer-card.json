@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_elements_offer_cards",
+  "info": {
+    "displayName": "offer_card"
+  },
+  "options": {},
+  "attributes": {
+    "titre": {
+      "type": "string"
+    },
+    "price_per_meal": {
+      "type": "string"
+    },
+    "features": {
+      "type": "customField",
+      "customField": "plugin::ckeditor.CKEditor",
+      "options": {
+        "output": "HTML",
+        "licenseKey": "eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3OTQ4NzM1OTksImp0aSI6ImU5Y2FiN2I2LTVlZTYtNDZmMC1hZjEyLTQzODZiN2FhZGQyOSIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiXSwiZmVhdHVyZXMiOlsiRFJVUCIsIkUyUCIsIkUyVyJdLCJyZW1vdmVGZWF0dXJlcyI6WyJQQiIsIlJGIiwiU0NIIiwiVENQIiwiVEwiLCJUQ1IiLCJJUiIsIlNVQSIsIkI2NEEiLCJMUCIsIkhFIiwiUkVEIiwiUEZPIiwiV0MiLCJGQVIiLCJCS00iLCJGUEgiLCJNUkUiXSwidmMiOiJiMGRkMmQ3NCJ9._FgL4N6ste_QZTA3-xIDP5Hh1xuQe_izfv7mAiwew1mdbA5JbZ1QBXDnbL2O9FFopXIUCGLgTtaAHwrzbrQsBg",
+        "preset": "rich"
+      }
+    },
+    "is_popular": {
+      "type": "boolean"
+    }
+  },
+  "config": {}
+}

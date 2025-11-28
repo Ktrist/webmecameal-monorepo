@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_blocs_page_testimonials_grids",
+  "info": {
+    "displayName": "testimonials_grid"
+  },
+  "options": {},
+  "attributes": {
+    "titre": {
+      "type": "string"
+    },
+    "testimonial_card": {
+      "type": "component",
+      "component": "blocs-page.avis",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}
