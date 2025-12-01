@@ -104,15 +104,10 @@ export default function DynamicPage() {
         }
 
         const json = await res.json()
-        console.log('📦 JSON reçu:', json)
-        console.log('📄 json.data:', json.data)
-        console.log('📏 json.data.length:', json.data?.length)
 
         if (json.data && json.data.length > 0) {
-          console.log('✅ Page trouvée:', json.data[0])
           setPageData(json.data[0])
         } else {
-          console.log('❌ Aucune page trouvée')
           setPageData(null)
         }
       } catch (error) {
@@ -123,10 +118,6 @@ export default function DynamicPage() {
     }
     fetchPageData()
   }, [currentSlug])
-
-  console.log('🔍 État actuel - pageData:', pageData)
-  console.log('🔍 État actuel - loading:', loading)
-  console.log('🔍 État actuel - error:', error)
 
   if (loading) return <Center h="50vh"><Spinner size="xl" color="brand.green" /></Center>
 
