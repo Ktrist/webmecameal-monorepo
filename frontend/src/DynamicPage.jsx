@@ -106,7 +106,7 @@ export default function DynamicPage() {
         const json = await res.json()
 
         if (json.data && json.data.length > 0) {
-          setPageData(json.data[0].attributes)
+          setPageData(json.data[0])
         } else {
           setPageData(null)
         }
