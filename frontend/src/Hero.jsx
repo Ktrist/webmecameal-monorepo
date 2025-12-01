@@ -4,16 +4,17 @@ import { STRAPI_URL } from './config'
 
 export default function Hero({ data }) {
   // data = { titre: "...", sous_titre: "...", image_fond: {...} }
-  
-  // On construit l'URL complète de l'image
-  const imageUrl = STRAPI_URL + data.image_fond.url
-  
+
+  // On construit l'URL complète de l'image (si elle existe)
+  const imageUrl = data.image_fond?.url ? STRAPI_URL + data.image_fond.url : null
+
   return (
     <Box
       w="full"
       // Responsive Height : 50vh sur mobile, 70vh sur desktop
-      h={{ base: "50vh", md: "70vh" }} 
-      bgImage={`url(${imageUrl})`}
+      h={{ base: "50vh", md: "70vh" }}
+      bgImage={imageUrl ? `url(${imageUrl})` : undefined}
+      bgGradient={!imageUrl ? 'linear(to-r, green.400, teal.500)' : undefined}
       bgSize="cover"
       bgPosition="center"
       position="relative"
@@ -35,13 +36,14 @@ export default function Hero({ data }) {
             {data.titre}
           </Heading>
           
-          <Text 
-            fontSize={{ base: "md", md: "xl" }} 
-            maxW="xl"
-            display={{ base: "none", md: "block" }} // Optionnel : Cacher le sous-titre sur très petits écrans ?
-          >
-            {data.sous_titre}
-          </Text>
+          {data.sous_titre && (
+            <Text
+              fontSize={{ base: "md", md: "xl" }}
+              maxW="xl"
+              display={{ base: "none", md: "block" }}
+              dangerouslySetInnerHTML={{ __html: data.sous_titre }}
+            />
+          )}
 
           <Button 
             as={RouterLink} 
