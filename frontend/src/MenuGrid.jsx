@@ -127,24 +127,14 @@ export default function MenuGrid({ data, context }) {
         flexDirection="column"
       >
         <Box h="220px" overflow="hidden" position="relative">
-          <Image 
-            src={imageUrl} 
-            alt={recipe.titre} 
-            w="100%" h="100%" 
+          <Image
+            src={imageUrl}
+            alt={recipe.titre}
+            w="100%" h="100%"
             objectFit="cover"
             transition="transform 0.4s"
             _hover={{ transform: "scale(1.05)" }}
           />
-          <Badge position="absolute" bottom={4} right={4} bg="white" fontSize="md" px={3} py={1} borderRadius="full" boxShadow="md">
-            {displayPrice}
-          </Badge>
-          
-          {/* Debugging : Si pas de lien Supabase */}
-          {!priceData && (
-            <Badge position="absolute" top={4} left={4} colorScheme="purple" fontSize="xs">
-              ID {recipe.supabase_menu_id} introuvable
-            </Badge>
-          )}
         </Box>
         
         <VStack p={6} align="start" spacing={3} flex="1">

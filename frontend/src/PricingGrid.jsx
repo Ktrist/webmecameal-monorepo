@@ -41,9 +41,9 @@ const PricingCard = ({ offer, index }) => {
       <VStack spacing={6} align="stretch" flex="1">
         <Box textAlign="center">
           <Heading size="md" mb={2} color="brand.dark">{titre}</Heading>
-          <Flex justify="center" align="baseline">
+          <Flex justify="center" align="baseline" gap={1}>
             <Text fontSize="4xl" fontWeight="bold" color="brand.green">{price_per_meal}</Text>
-            {/* Si le prix est juste un nombre, on ajoute le symbole, sinon on affiche tel quel */}
+            <Text fontSize="2xl" fontWeight="bold" color="brand.green">€</Text>
           </Flex>
         </Box>
 
