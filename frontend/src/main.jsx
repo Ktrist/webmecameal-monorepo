@@ -10,6 +10,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Layout from './Layout.jsx'
 import DynamicPage from './DynamicPage.jsx' // <-- NOM CORRECT
 import MenuDetailPage from './MenuDetailPage.jsx'
+import PersonnalisationPage from './PersonnalisationPage.jsx'
 import AuthPage from './AuthPage.jsx'
 import CheckoutPage from './CheckoutPage.jsx'
 import OrderSuccessPage from './OrderSuccessPage.jsx'
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
         element: <Layout />, 
         children: [
           { path: '/', element: <DynamicPage /> },
+          { path: '/commander/personnalisation', element: <PersonnalisationPage /> },
           { path: '/:slug', element: <DynamicPage /> }, // <-- CORRECTION 2
           { path: '/menu/:menuId', element: <MenuDetailPage /> },
           { path: '/checkout', element: <CheckoutPage /> },
