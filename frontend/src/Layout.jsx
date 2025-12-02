@@ -62,7 +62,7 @@ export default function Layout() {
       {/* --- HEADER STYLE QUITOQUE --- */}
       <Box shadow="sm" borderBottomWidth="1px" borderColor="gray.200" position="sticky" top={0} zIndex={10} bg="white">
         <Container maxW="container.xl">
-          <Flex justifyContent="space-between" alignItems="center" py={4}>
+          <Flex alignItems="center" py={4} gap={6}>
 
             {/* Logo */}
             <Heading
@@ -73,27 +73,29 @@ export default function Layout() {
               fontWeight="bold"
               _hover={{ opacity: 0.8 }}
               transition="opacity 0.2s"
+              flexShrink={0}
             >
               Webmecameal
             </Heading>
 
-            {/* --- NAVIGATION DESKTOP (Centre) --- */}
+            {/* --- NAVIGATION DESKTOP (Centre flexible) --- */}
             <HStack
               as="nav"
-              spacing={8}
+              spacing={6}
               display={{ base: 'none', lg: 'flex' }}
-              position="absolute"
-              left="50%"
-              transform="translateX(-50%)"
+              flex="1"
+              justify="center"
+              px={4}
             >
               {menuLinks.map((link) => (
                 <Link
                   key={link.id}
                   as={RouterLink}
                   to={link.url}
-                  fontSize="md"
+                  fontSize="sm"
                   fontWeight="500"
                   color="gray.700"
+                  whiteSpace="nowrap"
                   _hover={{ color: 'brand.green', textDecoration: 'none' }}
                   transition="color 0.2s"
                 >
@@ -103,7 +105,7 @@ export default function Layout() {
             </HStack>
 
             {/* --- ACTIONS DROITE (Desktop) --- */}
-            <HStack spacing={3} display={{ base: 'none', lg: 'flex' }}>
+            <HStack spacing={3} display={{ base: 'none', lg: 'flex' }} flexShrink={0}>
 
               {/* Icône Panier avec Badge - Uniquement si connecté */}
               {session && (
