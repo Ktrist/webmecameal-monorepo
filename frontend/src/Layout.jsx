@@ -185,7 +185,7 @@ export default function Layout() {
                   {/* Bouton Je m'abonne - Style teal solid */}
                   <Button
                     as={RouterLink}
-                    to="/checkout"
+                    to="/commander/personnalisation"
                     colorScheme="teal"
                     variant="solid"
                     borderRadius="full"

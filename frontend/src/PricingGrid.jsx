@@ -61,11 +61,11 @@ const PricingCard = ({ offer, index }) => {
         />
 
         <Box mt="auto" pt={6} w="full">
-          <Button 
+          <Button
             as={RouterLink}
-            to="/checkout" // Ou vers une page d'abonnement spécifique plus tard
-            size="lg" 
-            colorScheme={is_popular ? "teal" : "gray"} 
+            to="/commander/personnalisation"
+            size="lg"
+            colorScheme={is_popular ? "teal" : "gray"}
             variant={is_popular ? "solid" : "outline"}
             w="full"
             borderRadius="xl"
