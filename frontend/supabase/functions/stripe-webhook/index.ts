@@ -11,7 +11,7 @@ const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') as string, {
 // Cette clé servira à vérifier que c'est bien Stripe qui nous parle
 const cryptoProvider = Stripe.createSubtleCryptoProvider()
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const signature = req.headers.get('Stripe-Signature')
 
   // 1. Vérification de sécurité basique
