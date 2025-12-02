@@ -33,10 +33,14 @@ export default function ContentBlock({ data }) {
             <Heading size="2xl" lineHeight="1.2">
               {data.titre || "Des ingrédients d'exception."}
             </Heading>
-            <Text fontSize="lg" color="gray.600" lineHeight="tall">
-              {/* Ici on pourrait utiliser CKEditor content */}
-              {data.texte || "Nous sélectionnons nos producteurs avec soin. Pas de surgelé, pas de conservateurs. Juste de la vraie cuisine, préparée le matin même dans nos cuisines."}
-            </Text>
+            <Box
+              fontSize="lg"
+              color="gray.600"
+              lineHeight="tall"
+              dangerouslySetInnerHTML={{
+                __html: data.texte || "Nous sélectionnons nos producteurs avec soin. Pas de surgelé, pas de conservateurs. Juste de la vraie cuisine, préparée le matin même dans nos cuisines."
+              }}
+            />
           </VStack>
 
           {/* Partie Image */}

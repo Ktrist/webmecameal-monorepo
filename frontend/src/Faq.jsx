@@ -1,7 +1,7 @@
 import { Box, Container, Heading, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon } from '@chakra-ui/react'
 
 export default function Faq({ data }) {
-  const questions = data.questions || []
+  const questions = data.faq_item || []
 
   return (
     <Box py={20} bg="white">
