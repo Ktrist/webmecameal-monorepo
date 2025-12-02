@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react'
-import { 
+import {
   Box, Button, Container, Heading, Text, Flex, VStack, Divider,
   // Imports pour les Modales et Drawers (Menu Mobile)
-  Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, 
+  Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody,
   ModalCloseButton, useDisclosure, IconButton, HStack,
-  Drawer, DrawerBody, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, Link, Spacer
+  Drawer, DrawerBody, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, Link, Spacer,
+  Badge, Menu, MenuButton, MenuList, MenuItem
 } from '@chakra-ui/react'
 import { Link as RouterLink, Outlet, useOutletContext } from 'react-router-dom'
-import { FiShoppingCart, FiMenu, FiUser, FiLogOut } from 'react-icons/fi' 
+import { FiShoppingCart, FiMenu, FiUser, FiLogOut } from 'react-icons/fi'
 import { FaMinus, FaPlus, FaTrash } from 'react-icons/fa'
 import { useCart } from './CartContext'
 import { supabase } from './supabaseClient'
@@ -58,77 +59,158 @@ export default function Layout() {
   return (
     <Box display="flex" flexDirection="column" minH="100vh">
       
-      {/* --- HEADER --- */}
-      <Box shadow="sm" borderBottomWidth="1px" borderColor="gray.100" position="sticky" top={0} zIndex={10} bg="white">
-        <Container maxW="container.lg">
-          <Flex justifyContent="space-between" alignItems="center" py={3}>
+      {/* --- HEADER STYLE QUITOQUE --- */}
+      <Box shadow="sm" borderBottomWidth="1px" borderColor="gray.200" position="sticky" top={0} zIndex={10} bg="white">
+        <Container maxW="container.xl">
+          <Flex justifyContent="space-between" alignItems="center" py={4}>
+
             {/* Logo */}
-            <Heading as={RouterLink} to="/" size="md" color="brand.green">
+            <Heading
+              as={RouterLink}
+              to="/"
+              size="lg"
+              color="brand.green"
+              fontWeight="bold"
+              _hover={{ opacity: 0.8 }}
+              transition="opacity 0.2s"
+            >
               Webmecameal
             </Heading>
 
-            {/* --- NAVIGATION DESKTOP (Liens Dynamiques) --- */}
-            <HStack 
-                as="nav" 
-                spacing={6} 
-                display={{ base: 'none', md: 'flex' }} 
-                flex="1" 
-                ml={8}
+            {/* --- NAVIGATION DESKTOP (Centre) --- */}
+            <HStack
+              as="nav"
+              spacing={8}
+              display={{ base: 'none', lg: 'flex' }}
+              position="absolute"
+              left="50%"
+              transform="translateX(-50%)"
             >
               {menuLinks.map((link) => (
-                <Link 
-                  key={link.id} 
-                  as={RouterLink} 
-                  to={link.url} 
-                  fontWeight="medium" 
-                  color="brand.dark"
-                  _hover={{ color: 'brand.orange', textDecoration: 'none' }}
+                <Link
+                  key={link.id}
+                  as={RouterLink}
+                  to={link.url}
+                  fontSize="md"
+                  fontWeight="500"
+                  color="gray.700"
+                  _hover={{ color: 'brand.green', textDecoration: 'none' }}
+                  transition="color 0.2s"
                 >
                   {link.label}
                 </Link>
               ))}
             </HStack>
-            
+
             {/* --- ACTIONS DROITE (Desktop) --- */}
-            <Flex alignItems="center" display={{ base: 'none', md: 'flex' }}>
+            <HStack spacing={3} display={{ base: 'none', lg: 'flex' }}>
+
+              {/* Icône Panier avec Badge */}
+              <Box position="relative">
+                <IconButton
+                  icon={<FiShoppingCart size={20} />}
+                  variant="ghost"
+                  onClick={onCartOpen}
+                  aria-label="Panier"
+                  size="md"
+                  borderRadius="full"
+                  _hover={{ bg: 'gray.100' }}
+                />
+                {itemCount > 0 && (
+                  <Badge
+                    position="absolute"
+                    top="-1"
+                    right="-1"
+                    colorScheme="red"
+                    borderRadius="full"
+                    fontSize="xs"
+                    px={2}
+                  >
+                    {itemCount}
+                  </Badge>
+                )}
+              </Box>
+
+              {/* Bouton Se connecter / Menu utilisateur */}
               {session ? (
-                <HStack spacing={4}>
-                  <Button as={RouterLink} to="/compte" variant="ghost" leftIcon={<FiUser />} size="sm">
-                    Mon Compte
-                  </Button>
-                  <Button variant="ghost" onClick={onCartOpen} size="sm">
-                    <FiShoppingCart />
-                    <Text ml={2}>{itemCount}</Text>
-                  </Button>
-                  <Button colorScheme="gray" variant="outline" onClick={handleLogout} size="sm">
-                    Déconnexion
-                  </Button>
-                </HStack>
+                <Menu>
+                  <MenuButton
+                    as={Button}
+                    leftIcon={<FiUser />}
+                    variant="outline"
+                    borderRadius="full"
+                    size="md"
+                    borderColor="gray.300"
+                    _hover={{ bg: 'gray.50' }}
+                    _active={{ bg: 'gray.100' }}
+                  >
+                    Mon compte
+                  </MenuButton>
+                  <MenuList>
+                    <MenuItem as={RouterLink} to="/compte" icon={<FiUser />}>
+                      Mon profil
+                    </MenuItem>
+                    <MenuItem as={RouterLink} to="/admin">
+                      Administration
+                    </MenuItem>
+                    <Divider />
+                    <MenuItem icon={<FiLogOut />} onClick={handleLogout} color="red.500">
+                      Déconnexion
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
               ) : (
-                <Button as={RouterLink} to="/login" colorScheme="teal" size="sm">
-                  Connexion / Inscription
+                <Button
+                  as={RouterLink}
+                  to="/login"
+                  leftIcon={<FiUser />}
+                  colorScheme="teal"
+                  variant="solid"
+                  borderRadius="full"
+                  size="md"
+                  px={6}
+                  _hover={{ transform: 'translateY(-1px)', shadow: 'md' }}
+                  transition="all 0.2s"
+                >
+                  Se connecter
                 </Button>
               )}
-            </Flex>
+            </HStack>
 
-            {/* --- NAVIGATION MOBILE (Icônes + Burger) --- */}
-            <HStack display={{ base: 'flex', md: 'none' }} spacing={2}>
-               {session && (
-                  <IconButton 
-                    icon={<Flex align="center"><FiShoppingCart /><Text ml={1} fontSize="xs">{itemCount}</Text></Flex>}
-                    variant="ghost"
-                    onClick={onCartOpen}
-                    aria-label="Ouvrir le panier"
-                    size="sm"
-                  />
-               )}
-               <IconButton 
-                  icon={<FiMenu />} 
-                  onClick={onMenuOpen} 
-                  variant="outline"
-                  aria-label="Ouvrir le menu"
+            {/* --- NAVIGATION MOBILE (Burger + Panier) --- */}
+            <HStack display={{ base: 'flex', lg: 'none' }} spacing={2}>
+              {/* Panier Mobile */}
+              <Box position="relative">
+                <IconButton
+                  icon={<FiShoppingCart size={18} />}
+                  variant="ghost"
+                  onClick={onCartOpen}
+                  aria-label="Panier"
                   size="sm"
-               />
+                />
+                {itemCount > 0 && (
+                  <Badge
+                    position="absolute"
+                    top="-1"
+                    right="-1"
+                    colorScheme="red"
+                    borderRadius="full"
+                    fontSize="xs"
+                    px={1.5}
+                  >
+                    {itemCount}
+                  </Badge>
+                )}
+              </Box>
+
+              {/* Burger Menu */}
+              <IconButton
+                icon={<FiMenu />}
+                onClick={onMenuOpen}
+                variant="outline"
+                aria-label="Menu"
+                size="sm"
+              />
             </HStack>
 
           </Flex>
