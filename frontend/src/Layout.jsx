@@ -105,33 +105,35 @@ export default function Layout() {
             {/* --- ACTIONS DROITE (Desktop) --- */}
             <HStack spacing={3} display={{ base: 'none', lg: 'flex' }}>
 
-              {/* Icône Panier avec Badge */}
-              <Box position="relative">
-                <IconButton
-                  icon={<FiShoppingCart size={20} />}
-                  variant="ghost"
-                  onClick={onCartOpen}
-                  aria-label="Panier"
-                  size="md"
-                  borderRadius="full"
-                  _hover={{ bg: 'gray.100' }}
-                />
-                {itemCount > 0 && (
-                  <Badge
-                    position="absolute"
-                    top="-1"
-                    right="-1"
-                    colorScheme="red"
+              {/* Icône Panier avec Badge - Uniquement si connecté */}
+              {session && (
+                <Box position="relative">
+                  <IconButton
+                    icon={<FiShoppingCart size={20} />}
+                    variant="ghost"
+                    onClick={onCartOpen}
+                    aria-label="Panier"
+                    size="md"
                     borderRadius="full"
-                    fontSize="xs"
-                    px={2}
-                  >
-                    {itemCount}
-                  </Badge>
-                )}
-              </Box>
+                    _hover={{ bg: 'gray.100' }}
+                  />
+                  {itemCount > 0 && (
+                    <Badge
+                      position="absolute"
+                      top="-1"
+                      right="-1"
+                      colorScheme="red"
+                      borderRadius="full"
+                      fontSize="xs"
+                      px={2}
+                    >
+                      {itemCount}
+                    </Badge>
+                  )}
+                </Box>
+              )}
 
-              {/* Bouton Se connecter / Menu utilisateur */}
+              {/* Bouton Menu utilisateur ou Connexion */}
               {session ? (
                 <Menu>
                   <MenuButton
@@ -160,48 +162,69 @@ export default function Layout() {
                   </MenuList>
                 </Menu>
               ) : (
-                <Button
-                  as={RouterLink}
-                  to="/login"
-                  leftIcon={<FiUser />}
-                  colorScheme="teal"
-                  variant="solid"
-                  borderRadius="full"
-                  size="md"
-                  px={6}
-                  _hover={{ transform: 'translateY(-1px)', shadow: 'md' }}
-                  transition="all 0.2s"
-                >
-                  Se connecter
-                </Button>
+                <>
+                  {/* Bouton Me connecter - Outline transparent */}
+                  <Button
+                    as={RouterLink}
+                    to="/login"
+                    leftIcon={<FiUser />}
+                    variant="outline"
+                    borderRadius="full"
+                    size="md"
+                    px={6}
+                    borderColor="gray.300"
+                    bg="transparent"
+                    _hover={{ bg: 'gray.50' }}
+                    transition="all 0.2s"
+                  >
+                    Me connecter
+                  </Button>
+
+                  {/* Bouton Je m'abonne - Style teal solid */}
+                  <Button
+                    as={RouterLink}
+                    to="/checkout"
+                    colorScheme="teal"
+                    variant="solid"
+                    borderRadius="full"
+                    size="md"
+                    px={6}
+                    _hover={{ transform: 'translateY(-1px)', shadow: 'md' }}
+                    transition="all 0.2s"
+                  >
+                    Je m'abonne
+                  </Button>
+                </>
               )}
             </HStack>
 
             {/* --- NAVIGATION MOBILE (Burger + Panier) --- */}
             <HStack display={{ base: 'flex', lg: 'none' }} spacing={2}>
-              {/* Panier Mobile */}
-              <Box position="relative">
-                <IconButton
-                  icon={<FiShoppingCart size={18} />}
-                  variant="ghost"
-                  onClick={onCartOpen}
-                  aria-label="Panier"
-                  size="sm"
-                />
-                {itemCount > 0 && (
-                  <Badge
-                    position="absolute"
-                    top="-1"
-                    right="-1"
-                    colorScheme="red"
-                    borderRadius="full"
-                    fontSize="xs"
-                    px={1.5}
-                  >
-                    {itemCount}
-                  </Badge>
-                )}
-              </Box>
+              {/* Panier Mobile - Uniquement si connecté */}
+              {session && (
+                <Box position="relative">
+                  <IconButton
+                    icon={<FiShoppingCart size={18} />}
+                    variant="ghost"
+                    onClick={onCartOpen}
+                    aria-label="Panier"
+                    size="sm"
+                  />
+                  {itemCount > 0 && (
+                    <Badge
+                      position="absolute"
+                      top="-1"
+                      right="-1"
+                      colorScheme="red"
+                      borderRadius="full"
+                      fontSize="xs"
+                      px={1.5}
+                    >
+                      {itemCount}
+                    </Badge>
+                  )}
+                </Box>
+              )}
 
               {/* Burger Menu */}
               <IconButton
