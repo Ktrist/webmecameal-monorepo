@@ -50,13 +50,24 @@ export default function CheckoutPage() {
       return
     }
 
-    // Extraire le code postal de l'adresse (derniers 5 chiffres)
+    // Validation adresse complète
+    if (!address || address.trim().length < 10) {
+      toast({
+        title: "Adresse incomplète",
+        description: "Veuillez saisir une adresse complète (numéro, rue, code postal, ville)",
+        status: "warning"
+      })
+      return
+    }
+
+    // Extraire le code postal de l'adresse
     const postalCodeMatch = address.match(/\b\d{5}\b/)
     if (!postalCodeMatch) {
       toast({
-        title: "Adresse invalide",
-        description: "Veuillez inclure un code postal valide dans votre adresse (5 chiffres)",
-        status: "warning"
+        title: "Code postal manquant",
+        description: "Veuillez inclure votre code postal dans l'adresse (5 chiffres). Exemple: 12 rue de la Gare, 74000 Annecy",
+        status: "warning",
+        duration: 4000
       })
       return
     }
@@ -65,9 +76,20 @@ export default function CheckoutPage() {
     if (!isDeliverable(postalCode)) {
       toast({
         title: "Zone non desservie",
-        description: `Désolé, nous ne livrons pas au code postal ${postalCode}. Zones livrables : 74000, 74370, 74600, 74940, 74960`,
+        description: `Désolé, nous ne livrons pas au code postal ${postalCode}. Zones livrables : 74000, 74370, 74600, 74940, 74960 (Annecy et environs)`,
         status: "error",
         duration: 5000
+      })
+      return
+    }
+
+    // Vérifier que l'adresse contient plus que juste le code postal
+    const addressWithoutPostalCode = address.replace(postalCode, '').trim()
+    if (addressWithoutPostalCode.length < 5) {
+      toast({
+        title: "Adresse incomplète",
+        description: "Veuillez indiquer le numéro et le nom de la rue en plus du code postal",
+        status: "warning"
       })
       return
     }

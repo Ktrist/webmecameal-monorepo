@@ -4,7 +4,7 @@ import {
   Radio, RadioGroup, Stack, Image, Badge, useToast, Spinner, Center,
   Card, CardBody, Flex, Icon
 } from '@chakra-ui/react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useOutletContext } from 'react-router-dom'
 import { FiCheck, FiUser } from 'react-icons/fi'
 import { useCart } from './CartContext'
 import { STRAPI_URL } from './config'
@@ -22,6 +22,8 @@ export default function PersonnalisationPage() {
   const navigate = useNavigate()
   const toast = useToast()
   const { addToCart } = useCart()
+  const context = useOutletContext()
+  const session = context?.session || null
 
   // États
   const [postalCode, setPostalCode] = useState('')
@@ -86,6 +88,19 @@ export default function PersonnalisationPage() {
 
   // Validation et passage au checkout
   const handleCommander = () => {
+    // Vérifier que l'utilisateur est connecté
+    if (!session) {
+      toast({
+        title: 'Connexion requise',
+        description: 'Veuillez vous connecter pour passer commande',
+        status: 'info',
+        duration: 3000
+      })
+      // Rediriger vers la page de login
+      navigate('/login')
+      return
+    }
+
     // Vérifier que la zone de livraison est valide
     if (!isZoneValid) {
       toast({
@@ -182,9 +197,9 @@ export default function PersonnalisationPage() {
               </Heading>
               <RadioGroup value={portions} onChange={setPortions}>
                 <Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
-                  <PortionOption value="1" icon="👤" label="1 personne" />
-                  <PortionOption value="2" icon="👥" label="2 personnes" />
-                  <PortionOption value="4" icon="👨‍👩‍👧‍👦" label="4 personnes" />
+                  <PortionOption value="1" icon="👤" label="1 personne" isSelected={portions === '1'} />
+                  <PortionOption value="2" icon="👥" label="2 personnes" isSelected={portions === '2'} />
+                  <PortionOption value="4" icon="👨‍👩‍👧‍👦" label="4 personnes" isSelected={portions === '4'} />
                 </Stack>
               </RadioGroup>
             </VStack>
@@ -203,9 +218,9 @@ export default function PersonnalisationPage() {
                 setSelectedRecipes([]) // Reset sélection
               }}>
                 <Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
-                  <PlatsOption value="2" price={PRICING[2]} label="2 plats" />
-                  <PlatsOption value="3" price={PRICING[3]} label="3 plats" isPopular />
-                  <PlatsOption value="5" price={PRICING[5]} label="5 plats" />
+                  <PlatsOption value="2" price={PRICING[2]} label="2 plats" isSelected={nbPlats === '2'} />
+                  <PlatsOption value="3" price={PRICING[3]} label="3 plats" isPopular isSelected={nbPlats === '3'} />
+                  <PlatsOption value="5" price={PRICING[5]} label="5 plats" isSelected={nbPlats === '5'} />
                 </Stack>
               </RadioGroup>
             </VStack>
@@ -291,24 +306,39 @@ export default function PersonnalisationPage() {
 }
 
 // Composant Option Portion
-function PortionOption({ value, icon, label }) {
+function PortionOption({ value, icon, label, isSelected }) {
   return (
-    <Box as="label" flex="1" cursor="pointer">
+    <Box as="label" flex="1" cursor="pointer" position="relative">
       <Radio value={value} display="none" />
+      {isSelected && (
+        <Badge
+          position="absolute"
+          top="-2"
+          right="-2"
+          colorScheme="green"
+          zIndex={1}
+          px={2}
+          py={1}
+          borderRadius="full"
+          fontSize="xs"
+          display="flex"
+          alignItems="center"
+          gap={1}
+        >
+          <Icon as={FiCheck} /> Sélectionné
+        </Badge>
+      )}
       <Card
         _hover={{ borderColor: 'brand.green', shadow: 'md' }}
         transition="all 0.2s"
-        sx={{
-          'input:checked ~ &': {
-            borderColor: 'brand.green',
-            borderWidth: '2px',
-            bg: 'green.50'
-          }
-        }}
+        borderColor={isSelected ? 'brand.green' : 'gray.200'}
+        borderWidth={isSelected ? '3px' : '1px'}
+        bg={isSelected ? 'green.50' : 'white'}
+        shadow={isSelected ? 'lg' : 'sm'}
       >
         <CardBody textAlign="center">
           <Text fontSize="3xl" mb={2}>{icon}</Text>
-          <Text fontWeight="medium">{label}</Text>
+          <Text fontWeight={isSelected ? 'bold' : 'medium'}>{label}</Text>
         </CardBody>
       </Card>
     </Box>
@@ -316,7 +346,7 @@ function PortionOption({ value, icon, label }) {
 }
 
 // Composant Option Plats
-function PlatsOption({ value, price, label, isPopular }) {
+function PlatsOption({ value, price, label, isPopular, isSelected }) {
   return (
     <Box as="label" flex="1" cursor="pointer" position="relative">
       <Radio value={value} display="none" />
@@ -335,19 +365,34 @@ function PlatsOption({ value, price, label, isPopular }) {
           Populaire
         </Badge>
       )}
+      {isSelected && (
+        <Badge
+          position="absolute"
+          top="-2"
+          right="-2"
+          colorScheme="green"
+          zIndex={1}
+          px={2}
+          py={1}
+          borderRadius="full"
+          fontSize="xs"
+          display="flex"
+          alignItems="center"
+          gap={1}
+        >
+          <Icon as={FiCheck} /> Sélectionné
+        </Badge>
+      )}
       <Card
         _hover={{ borderColor: 'brand.green', shadow: 'md' }}
         transition="all 0.2s"
-        sx={{
-          'input:checked ~ &': {
-            borderColor: 'brand.green',
-            borderWidth: '2px',
-            bg: 'green.50'
-          }
-        }}
+        borderColor={isSelected ? 'brand.green' : 'gray.200'}
+        borderWidth={isSelected ? '3px' : '1px'}
+        bg={isSelected ? 'green.50' : 'white'}
+        shadow={isSelected ? 'lg' : 'sm'}
       >
         <CardBody textAlign="center">
-          <Heading size="md" mb={2}>{label}</Heading>
+          <Heading size="md" mb={2} fontWeight={isSelected ? 'bold' : 'semibold'}>{label}</Heading>
           <Text fontSize="2xl" fontWeight="bold" color="brand.green">
             {price} € <Text as="span" fontSize="sm" color="gray.600">/plat</Text>
           </Text>

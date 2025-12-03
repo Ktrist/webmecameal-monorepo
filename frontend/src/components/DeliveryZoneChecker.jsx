@@ -16,10 +16,10 @@ import {
 } from '@chakra-ui/react'
 import { FiMapPin, FiCheck, FiX } from 'react-icons/fi'
 import {
-  isDeliverable,
+  validateDeliveryInput,
   getDeliveryErrorMessage,
   getDeliverySuccessMessage,
-  DELIVERY_ZONES,
+  getDeliveryZonesList,
 } from '../utils/deliveryZones'
 
 /**
@@ -39,9 +39,10 @@ export default function DeliveryZoneChecker({
   required = false,
   initialValue = '',
 }) {
-  const [postalCode, setPostalCode] = useState(initialValue)
-  const [validationResult, setValidationResult] = useState(null) // null | 'valid' | 'invalid'
+  const [input, setInput] = useState(initialValue)
+  const [validationResult, setValidationResult] = useState(null) // null | { isValid, postalCode, cityName, type }
   const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
   const [isChecking, setIsChecking] = useState(false)
 
   const handleCheck = () => {
@@ -49,17 +50,19 @@ export default function DeliveryZoneChecker({
 
     // Simuler un léger délai pour l'UX
     setTimeout(() => {
-      const isValid = isDeliverable(postalCode)
+      const result = validateDeliveryInput(input)
 
-      setValidationResult(isValid ? 'valid' : 'invalid')
+      setValidationResult(result)
 
-      if (isValid) {
+      if (result.isValid) {
         setErrorMessage('')
-        if (onValidZone) onValidZone(postalCode)
+        setSuccessMessage(getDeliverySuccessMessage(result))
+        if (onValidZone) onValidZone(result.postalCode)
       } else {
-        const message = getDeliveryErrorMessage(postalCode)
+        const message = getDeliveryErrorMessage(input)
         setErrorMessage(message)
-        if (onInvalidZone) onInvalidZone(postalCode)
+        setSuccessMessage('')
+        if (onInvalidZone) onInvalidZone(input)
       }
 
       setIsChecking(false)
@@ -68,10 +71,11 @@ export default function DeliveryZoneChecker({
 
   const handleInputChange = (e) => {
     const value = e.target.value
-    setPostalCode(value)
+    setInput(value)
     // Reset la validation quand on modifie
     setValidationResult(null)
     setErrorMessage('')
+    setSuccessMessage('')
   }
 
   const handleKeyPress = (e) => {
@@ -92,26 +96,23 @@ export default function DeliveryZoneChecker({
         <Flex gap={2}>
           <Input
             type="text"
-            placeholder="Ex: 74000"
-            value={postalCode}
+            placeholder="Ex: 74000 ou Annecy"
+            value={input}
             onChange={handleInputChange}
             onKeyPress={handleKeyPress}
-            maxLength={5}
-            pattern="[0-9]*"
-            inputMode="numeric"
             bg="white"
             borderColor={
-              validationResult === 'valid'
+              validationResult?.isValid
                 ? 'green.400'
-                : validationResult === 'invalid'
+                : validationResult && !validationResult.isValid
                 ? 'red.400'
                 : 'gray.300'
             }
             _focus={{
               borderColor:
-                validationResult === 'valid'
+                validationResult?.isValid
                   ? 'green.500'
-                  : validationResult === 'invalid'
+                  : validationResult && !validationResult.isValid
                   ? 'red.500'
                   : 'brand.green',
             }}
@@ -129,23 +130,23 @@ export default function DeliveryZoneChecker({
 
         {showZonesList && !validationResult && (
           <Text fontSize="sm" color="gray.600" mt={2}>
-            Zones livrables : {DELIVERY_ZONES.join(', ')}
+            {getDeliveryZonesList()}
           </Text>
         )}
       </FormControl>
 
       {/* Résultat de validation */}
-      {validationResult === 'valid' && (
+      {validationResult?.isValid && (
         <Alert status="success" mt={4} borderRadius="md">
           <AlertIcon as={FiCheck} />
           <Box>
             <AlertTitle>Zone de livraison valide !</AlertTitle>
-            <AlertDescription>{getDeliverySuccessMessage()}</AlertDescription>
+            <AlertDescription>{successMessage}</AlertDescription>
           </Box>
         </Alert>
       )}
 
-      {validationResult === 'invalid' && (
+      {validationResult && !validationResult.isValid && (
         <Alert status="error" mt={4} borderRadius="md">
           <AlertIcon as={FiX} />
           <Box>
