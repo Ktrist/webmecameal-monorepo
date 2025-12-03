@@ -1,23 +1,25 @@
 import { useState, useEffect } from 'react'
-import { useOutletContext, useNavigate, Link as RouterLink } from 'react-router-dom'
+import { useOutletContext, useNavigate, Link as RouterLink, useSearchParams } from 'react-router-dom'
 import { supabase } from './supabaseClient'
 import {
   Container, Heading, Tabs, TabList, TabPanels, Tab, TabPanel,
   VStack, FormControl, FormLabel, Input, Button, useToast,
   Box, Text, Avatar, Flex, Table, Thead, Tbody, Tr, Th, Td,
-  Badge, Spinner, Center, IconButton,
+  Badge, Spinner, Center, IconButton, Alert, AlertIcon, AlertTitle, AlertDescription,
   // Imports pour le Modal de détail
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure, Divider
 } from '@chakra-ui/react'
-import { ViewIcon } from '@chakra-ui/icons' // Ou une icône de react-icons si vous préférez
+import { ViewIcon } from '@chakra-ui/icons'
+import { FiCheck, FiX } from 'react-icons/fi'
 
 export default function AccountPage() {
   const { user, profile } = useOutletContext()
   const navigate = useNavigate()
   const toast = useToast()
-  
+  const [searchParams] = useSearchParams()
+
   const [loading, setLoading] = useState(false)
-  
+
   // États du profil
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -27,6 +29,10 @@ export default function AccountPage() {
   // États pour l'historique
   const [orders, setOrders] = useState([])
   const [ordersLoading, setOrdersLoading] = useState(false)
+
+  // États pour l'abonnement
+  const [subscription, setSubscription] = useState(null)
+  const [subscriptionLoading, setSubscriptionLoading] = useState(false)
 
   // États pour le Modal de Détail
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -52,7 +58,7 @@ export default function AccountPage() {
     async function fetchMyOrders() {
       if (!user) return
       setOrdersLoading(true)
-      
+
       const { data, error } = await supabase
         .from('orders')
         .select(`
@@ -73,6 +79,44 @@ export default function AccountPage() {
     }
     fetchMyOrders()
   }, [user])
+
+  // 4. Charger l'Abonnement
+  useEffect(() => {
+    async function fetchSubscription() {
+      if (!user) return
+      setSubscriptionLoading(true)
+
+      const { data, error } = await supabase
+        .from('subscriptions')
+        .select('*')
+        .eq('user_id', user.id)
+        .in('status', ['active', 'trialing', 'past_due'])
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single()
+
+      if (!error && data) {
+        setSubscription(data)
+      }
+      setSubscriptionLoading(false)
+    }
+    fetchSubscription()
+  }, [user])
+
+  // 5. Gérer le message de succès d'abonnement
+  useEffect(() => {
+    if (searchParams.get('subscription_success') === 'true') {
+      toast({
+        title: 'Abonnement activé !',
+        description: 'Votre abonnement a été créé avec succès. Vous recevrez une confirmation par email.',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      })
+      // Nettoyer l'URL
+      navigate('/compte', { replace: true })
+    }
+  }, [searchParams, toast, navigate])
 
   const handleUpdateAddress = async (e) => {
     e.preventDefault()
@@ -116,6 +160,7 @@ export default function AccountPage() {
       <Tabs colorScheme="teal" variant="enclosed">
         <TabList>
           <Tab fontWeight="bold">Mes Informations</Tab>
+          <Tab fontWeight="bold">Mon Abonnement</Tab>
           <Tab fontWeight="bold">Historique des Commandes</Tab>
         </TabList>
 
@@ -156,7 +201,118 @@ export default function AccountPage() {
             </form>
           </TabPanel>
 
-          {/* PANNEAU 2 : HISTORIQUE */}
+          {/* PANNEAU 2 : ABONNEMENT */}
+          <TabPanel borderWidth="1px" borderTopWidth="0" borderRadius="0 0 md md" p={6}>
+            {subscriptionLoading ? (
+              <Center py={10}><Spinner /></Center>
+            ) : subscription ? (
+              <VStack align="stretch" spacing={6} maxW="2xl">
+                {/* Alerte de statut */}
+                {subscription.status === 'past_due' && (
+                  <Alert status="warning" borderRadius="md">
+                    <AlertIcon />
+                    <Box>
+                      <AlertTitle>Paiement en attente</AlertTitle>
+                      <AlertDescription>
+                        Le dernier paiement n'a pas pu être effectué. Veuillez vérifier vos informations bancaires.
+                      </AlertDescription>
+                    </Box>
+                  </Alert>
+                )}
+
+                {/* Carte de l'abonnement actif */}
+                <Box borderWidth="2px" borderColor="green.400" borderRadius="lg" p={6} bg="green.50">
+                  <Flex align="center" justify="space-between" mb={4}>
+                    <Heading size="md">Abonnement Actif</Heading>
+                    <Badge colorScheme="green" fontSize="md" px={3} py={1} borderRadius="full">
+                      {subscription.status === 'active' ? 'Actif' :
+                       subscription.status === 'trialing' ? 'Période d\'essai' :
+                       subscription.status === 'past_due' ? 'En retard' : subscription.status}
+                    </Badge>
+                  </Flex>
+
+                  <VStack align="stretch" spacing={4}>
+                    {/* Type de plan */}
+                    <Flex justify="space-between">
+                      <Text fontWeight="bold" color="gray.600">Formule :</Text>
+                      <Text fontSize="lg" fontWeight="bold">
+                        {subscription.plan_type === 'hebdo_2j' ? 'Hebdo 2 jours' :
+                         subscription.plan_type === 'hebdo_3j' ? 'Hebdo 3 jours' :
+                         subscription.plan_type === 'hebdo_5j' ? 'Hebdo 5 jours' :
+                         subscription.plan_type === 'mensuel' ? 'Mensuel Flexible' :
+                         subscription.plan_type}
+                      </Text>
+                    </Flex>
+
+                    {/* Prix */}
+                    <Flex justify="space-between">
+                      <Text fontWeight="bold" color="gray.600">Montant :</Text>
+                      <Text fontSize="2xl" fontWeight="bold" color="brand.green">
+                        {subscription.amount} € / {subscription.plan_type.startsWith('hebdo') ? 'semaine' : 'mois'}
+                      </Text>
+                    </Flex>
+
+                    <Divider />
+
+                    {/* Dates */}
+                    <Flex justify="space-between">
+                      <Text color="gray.600">Début de période :</Text>
+                      <Text fontWeight="semibold">
+                        {new Date(subscription.current_period_start).toLocaleDateString('fr-FR')}
+                      </Text>
+                    </Flex>
+
+                    <Flex justify="space-between">
+                      <Text color="gray.600">Prochain paiement :</Text>
+                      <Text fontWeight="semibold">
+                        {new Date(subscription.current_period_end).toLocaleDateString('fr-FR')}
+                      </Text>
+                    </Flex>
+
+                    {subscription.cancel_at_period_end && (
+                      <Alert status="info" borderRadius="md">
+                        <AlertIcon />
+                        <AlertDescription>
+                          Votre abonnement sera annulé le {new Date(subscription.current_period_end).toLocaleDateString('fr-FR')}
+                        </AlertDescription>
+                      </Alert>
+                    )}
+                  </VStack>
+                </Box>
+
+                {/* Actions de gestion (placeholder pour US-007) */}
+                <Box borderWidth="1px" borderRadius="lg" p={6}>
+                  <Heading size="sm" mb={4}>Gestion de l'abonnement</Heading>
+                  <VStack spacing={3} align="stretch">
+                    <Button variant="outline" colorScheme="gray" isDisabled>
+                      Mettre en pause (Bientôt disponible)
+                    </Button>
+                    <Button variant="outline" colorScheme="red" isDisabled>
+                      Annuler l'abonnement (Bientôt disponible)
+                    </Button>
+                    <Text fontSize="xs" color="gray.500" mt={2}>
+                      Pour modifier votre abonnement, contactez-nous à support@webmecameal.fr
+                    </Text>
+                  </VStack>
+                </Box>
+              </VStack>
+            ) : (
+              <VStack py={10} spacing={4}>
+                <Box textAlign="center" mb={4}>
+                  <FiX size={48} color="gray" />
+                </Box>
+                <Heading size="md" color="gray.600">Aucun abonnement actif</Heading>
+                <Text color="gray.500" textAlign="center">
+                  Vous n'avez pas encore d'abonnement. Découvrez nos formules pour profiter de repas réguliers !
+                </Text>
+                <Button as={RouterLink} to="/abonnements" colorScheme="teal" size="lg" mt={4}>
+                  Découvrir nos abonnements
+                </Button>
+              </VStack>
+            )}
+          </TabPanel>
+
+          {/* PANNEAU 3 : HISTORIQUE */}
           <TabPanel borderWidth="1px" borderTopWidth="0" borderRadius="0 0 md md" p={6}>
             {ordersLoading ? (
               <Center py={10}><Spinner /></Center>
