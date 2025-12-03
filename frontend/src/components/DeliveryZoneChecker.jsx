@@ -127,12 +127,6 @@ export default function DeliveryZoneChecker({
             Vérifier
           </Button>
         </Flex>
-
-        {showZonesList && !validationResult && (
-          <Text fontSize="sm" color="gray.600" mt={2}>
-            {getDeliveryZonesList()}
-          </Text>
-        )}
       </FormControl>
 
       {/* Résultat de validation */}
