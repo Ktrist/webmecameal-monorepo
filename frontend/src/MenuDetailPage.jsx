@@ -136,16 +136,18 @@ export default function MenuDetailPage() {
 
           <Divider />
 
-          {/* Contenu Riche (Strapi) */}
-          {recipeData && recipeData.details_recette ? (
+          {/* Contenu Riche (Strapi) - recipe_details */}
+          {recipeData && (recipeData.recipe_details || recipeData.details_recette) ? (
             <Box>
               <Heading size="lg" mb={4} color="brand.orange">
                 {recipeData.titre || "La Recette du Chef"}
               </Heading>
-              
-              <Box 
+
+              <Box
                 className="ck-content"
-                dangerouslySetInnerHTML={{ __html: recipeData.details_recette }} 
+                dangerouslySetInnerHTML={{
+                  __html: recipeData.recipe_details || recipeData.details_recette
+                }}
                 sx={{
                   'ul': { paddingLeft: '20px', marginBottom: '1rem' },
                   'ol': { paddingLeft: '20px', marginBottom: '1rem' },
