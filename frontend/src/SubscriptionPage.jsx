@@ -119,6 +119,10 @@ export default function SubscriptionPage() {
   const [loading, setLoading] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState(null)
 
+  // DEBUG: Vérifier les Price IDs
+  console.log('🔍 DEBUG STRIPE_PRICES:', STRIPE_PRICES)
+  console.log('🔍 DEBUG Plans:', SUBSCRIPTION_PLANS.map(p => ({ id: p.id, stripePriceId: p.stripePriceId })))
+
   const handleSubscribe = async (plan) => {
     // Vérifier l'authentification
     if (!session || !user) {
