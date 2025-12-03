@@ -12,6 +12,7 @@ import DynamicPage from './DynamicPage.jsx' // <-- NOM CORRECT
 import MenuDetailPage from './MenuDetailPage.jsx'
 import PersonnalisationPage from './PersonnalisationPage.jsx'
 import SubscriptionPage from './SubscriptionPage.jsx'
+import DailyMenuSelectionPage from './DailyMenuSelectionPage.jsx'
 import AuthPage from './AuthPage.jsx'
 import CheckoutPage from './CheckoutPage.jsx'
 import OrderSuccessPage from './OrderSuccessPage.jsx'
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
           { path: '/', element: <DynamicPage /> },
           { path: '/commander/personnalisation', element: <PersonnalisationPage /> },
           { path: '/abonnements', element: <SubscriptionPage /> },
+          { path: '/mes-menus', element: <DailyMenuSelectionPage /> },
           { path: '/:slug', element: <DynamicPage /> }, // <-- CORRECTION 2
           { path: '/menu/:menuId', element: <MenuDetailPage /> },
           { path: '/checkout', element: <CheckoutPage /> },
