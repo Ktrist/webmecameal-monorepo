@@ -33,6 +33,7 @@ export default function AccountPage() {
   // États pour l'abonnement
   const [subscription, setSubscription] = useState(null)
   const [subscriptionLoading, setSubscriptionLoading] = useState(false)
+  const [managingSubscription, setManagingSubscription] = useState(false)
 
   // États pour le Modal de Détail
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -136,6 +137,87 @@ export default function AccountPage() {
       toast({ title: "Erreur", description: error.message, status: "error" })
     } finally {
       setLoading(false)
+    }
+  }
+
+  // Fonction pour gérer l'abonnement (pause, annulation, réactivation)
+  const handleManageSubscription = async (action) => {
+    if (!subscription) return
+
+    // Confirmation pour annulation immédiate
+    if (action === 'cancel_immediately') {
+      const confirmed = window.confirm(
+        'Êtes-vous sûr de vouloir annuler immédiatement votre abonnement ? ' +
+        'Vous perdrez l\'accès à vos avantages dès maintenant.'
+      )
+      if (!confirmed) return
+    }
+
+    // Confirmation pour mise en pause
+    if (action === 'cancel_at_period_end') {
+      const confirmed = window.confirm(
+        'Votre abonnement sera mis en pause à la fin de la période de facturation. ' +
+        'Vous pourrez continuer à profiter de vos avantages jusqu\'au ' +
+        new Date(subscription.current_period_end).toLocaleDateString('fr-FR') + '. Continuer ?'
+      )
+      if (!confirmed) return
+    }
+
+    setManagingSubscription(true)
+
+    try {
+      const { data, error } = await supabase.functions.invoke('manage-subscription', {
+        body: {
+          action: action,
+          subscriptionId: subscription.id,
+        },
+      })
+
+      if (error) throw error
+
+      // Messages de succès selon l'action
+      const messages = {
+        cancel_at_period_end: {
+          title: 'Abonnement mis en pause',
+          description: `Votre abonnement sera annulé le ${new Date(subscription.current_period_end).toLocaleDateString('fr-FR')}`,
+        },
+        reactivate: {
+          title: 'Abonnement réactivé',
+          description: 'Votre abonnement a été réactivé avec succès',
+        },
+        cancel_immediately: {
+          title: 'Abonnement annulé',
+          description: 'Votre abonnement a été annulé immédiatement',
+        },
+      }
+
+      toast({
+        title: messages[action].title,
+        description: messages[action].description,
+        status: action === 'cancel_immediately' ? 'warning' : 'success',
+        duration: 5000,
+      })
+
+      // Rafraîchir les données de l'abonnement
+      const { data: refreshedSub } = await supabase
+        .from('subscriptions')
+        .select('*')
+        .eq('id', subscription.id)
+        .single()
+
+      if (refreshedSub) {
+        setSubscription(refreshedSub)
+      }
+
+    } catch (error) {
+      toast({
+        title: 'Erreur',
+        description: error.message || 'Une erreur est survenue',
+        status: 'error',
+        duration: 5000,
+      })
+    } finally {
+      setManagingSubscription(false)
     }
   }
 
@@ -280,20 +362,58 @@ export default function AccountPage() {
                   </VStack>
                 </Box>
 
-                {/* Actions de gestion (placeholder pour US-007) */}
+                {/* Actions de gestion */}
                 <Box borderWidth="1px" borderRadius="lg" p={6}>
                   <Heading size="sm" mb={4}>Gestion de l'abonnement</Heading>
-                  <VStack spacing={3} align="stretch">
-                    <Button variant="outline" colorScheme="gray" isDisabled>
-                      Mettre en pause (Bientôt disponible)
-                    </Button>
-                    <Button variant="outline" colorScheme="red" isDisabled>
-                      Annuler l'abonnement (Bientôt disponible)
-                    </Button>
-                    <Text fontSize="xs" color="gray.500" mt={2}>
-                      Pour modifier votre abonnement, contactez-nous à support@webmecameal.fr
-                    </Text>
-                  </VStack>
+
+                  {subscription.cancel_at_period_end ? (
+                    // Si l'abonnement est marqué pour annulation
+                    <VStack spacing={3} align="stretch">
+                      <Alert status="info" borderRadius="md">
+                        <AlertIcon />
+                        <Box flex="1">
+                          <AlertTitle fontSize="sm">Annulation programmée</AlertTitle>
+                          <AlertDescription fontSize="xs">
+                            Votre abonnement prendra fin le {new Date(subscription.current_period_end).toLocaleDateString('fr-FR')}
+                          </AlertDescription>
+                        </Box>
+                      </Alert>
+                      <Button
+                        colorScheme="green"
+                        onClick={() => handleManageSubscription('reactivate')}
+                        isLoading={managingSubscription}
+                      >
+                        Réactiver mon abonnement
+                      </Button>
+                      <Text fontSize="xs" color="gray.500" textAlign="center">
+                        Vous pouvez réactiver votre abonnement à tout moment
+                      </Text>
+                    </VStack>
+                  ) : (
+                    // Actions normales
+                    <VStack spacing={3} align="stretch">
+                      <Button
+                        variant="outline"
+                        colorScheme="orange"
+                        onClick={() => handleManageSubscription('cancel_at_period_end')}
+                        isLoading={managingSubscription}
+                      >
+                        Mettre en pause à la fin de la période
+                      </Button>
+                      <Button
+                        variant="outline"
+                        colorScheme="red"
+                        onClick={() => handleManageSubscription('cancel_immediately')}
+                        isLoading={managingSubscription}
+                      >
+                        Annuler immédiatement
+                      </Button>
+                      <Text fontSize="xs" color="gray.500" mt={2} textAlign="center">
+                        La mise en pause prendra effet à la fin de votre période de facturation.
+                        L'annulation immédiate arrête votre abonnement dès maintenant.
+                      </Text>
+                    </VStack>
+                  )}
                 </Box>
               </VStack>
             ) : (
