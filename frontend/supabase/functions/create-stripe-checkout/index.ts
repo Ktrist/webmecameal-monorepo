@@ -1,4 +1,4 @@
-import Stripe from 'stripe'
+import Stripe from 'https://esm.sh/stripe@14.21.0?target=deno'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -97,9 +97,9 @@ Deno.serve(async (req) => {
     // 6. Réponse succès
     return new Response(
       JSON.stringify({ url: session.url }),
-      { 
+      {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200 
+        status: 200
       }
     )
 
@@ -108,9 +108,9 @@ Deno.serve(async (req) => {
     console.error('Erreur Stripe:', error.message)
     return new Response(
       JSON.stringify({ error: error.message }),
-      { 
+      {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 400 
+        status: 400
       }
     )
   }
