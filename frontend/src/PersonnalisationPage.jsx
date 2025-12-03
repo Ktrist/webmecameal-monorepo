@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { FiCheck, FiUser } from 'react-icons/fi'
 import { useCart } from './CartContext'
 import { STRAPI_URL } from './config'
+import DeliveryZoneChecker from './components/DeliveryZoneChecker'
 
 // Grille tarifaire
 const PRICING = {
@@ -23,6 +24,8 @@ export default function PersonnalisationPage() {
   const { addToCart } = useCart()
 
   // États
+  const [postalCode, setPostalCode] = useState('')
+  const [isZoneValid, setIsZoneValid] = useState(false)
   const [portions, setPortions] = useState('1')
   const [nbPlats, setNbPlats] = useState('3')
   const [selectedRecipes, setSelectedRecipes] = useState([])
@@ -83,6 +86,17 @@ export default function PersonnalisationPage() {
 
   // Validation et passage au checkout
   const handleCommander = () => {
+    // Vérifier que la zone de livraison est valide
+    if (!isZoneValid) {
+      toast({
+        title: 'Zone de livraison non vérifiée',
+        description: 'Veuillez vérifier que votre code postal est dans notre zone de livraison',
+        status: 'warning',
+        duration: 3000
+      })
+      return
+    }
+
     if (selectedRecipes.length !== parseInt(nbPlats)) {
       toast({
         title: 'Sélection incomplète',
@@ -135,6 +149,29 @@ export default function PersonnalisationPage() {
             Choisissez vos portions, le nombre de plats et composez votre box. Desserts inclus automatiquement !
           </Text>
         </VStack>
+
+        {/* Étape 0 : Vérification zone de livraison */}
+        <Card mb={8} shadow="md" borderWidth={isZoneValid ? '2px' : '1px'} borderColor={isZoneValid ? 'green.400' : 'gray.200'}>
+          <CardBody>
+            <VStack align="stretch" spacing={6}>
+              <Heading size="md" color="brand.dark">
+                ⚡ Vérifiez votre zone de livraison
+              </Heading>
+              <DeliveryZoneChecker
+                onValidZone={(code) => {
+                  setPostalCode(code)
+                  setIsZoneValid(true)
+                }}
+                onInvalidZone={(code) => {
+                  setPostalCode(code)
+                  setIsZoneValid(false)
+                }}
+                required={true}
+                showZonesList={true}
+              />
+            </VStack>
+          </CardBody>
+        </Card>
 
         {/* Étape 1 : Nombre de portions */}
         <Card mb={8} shadow="md">

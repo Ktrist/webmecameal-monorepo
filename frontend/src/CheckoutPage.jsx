@@ -7,6 +7,7 @@ import {
   Textarea, Button, useToast, Spinner, Center, Text,
   Box, HStack, Divider, Radio, RadioGroup, Stack
 } from '@chakra-ui/react'
+import { isDeliverable } from './utils/deliveryZones'
 
 export default function CheckoutPage() {
   const { profile, user } = useOutletContext()
@@ -48,7 +49,29 @@ export default function CheckoutPage() {
       toast({ title: "Date de livraison requise.", status: "warning" })
       return
     }
-    
+
+    // Extraire le code postal de l'adresse (derniers 5 chiffres)
+    const postalCodeMatch = address.match(/\b\d{5}\b/)
+    if (!postalCodeMatch) {
+      toast({
+        title: "Adresse invalide",
+        description: "Veuillez inclure un code postal valide dans votre adresse (5 chiffres)",
+        status: "warning"
+      })
+      return
+    }
+
+    const postalCode = postalCodeMatch[0]
+    if (!isDeliverable(postalCode)) {
+      toast({
+        title: "Zone non desservie",
+        description: `Désolé, nous ne livrons pas au code postal ${postalCode}. Zones livrables : 74000, 74370, 74600, 74940, 74960`,
+        status: "error",
+        duration: 5000
+      })
+      return
+    }
+
     setIsSubmitting(true)
 
     try {
@@ -172,11 +195,15 @@ export default function CheckoutPage() {
 
           <FormControl isRequired>
             <FormLabel>Adresse de livraison (Bureau)</FormLabel>
-            <Input 
-              value={address} 
-              onChange={(e) => setAddress(e.target.value)} 
-              bg="white" 
+            <Input
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              bg="white"
+              placeholder="Ex: 12 rue de la Gare, 74000 Annecy"
             />
+            <Text fontSize="sm" color="gray.600" mt={1}>
+              ⚠️ Zones livrables : 74000, 74370, 74600, 74940, 74960 (Annecy et environs)
+            </Text>
           </FormControl>
 
           <Heading size="md" mb={2} mt={6}>2. Date & Paiement</Heading>
