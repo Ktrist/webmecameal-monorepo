@@ -13,6 +13,9 @@ function AdminSidebar() {
         <Link as={RouterLink} to="/admin/menus" _hover={{ textDecor: 'none', bg: 'gray.200' }} p={2} borderRadius="md">
           Gérer les Menus
         </Link>
+        <Link as={RouterLink} to="/admin/menus-quotidiens" _hover={{ textDecor: 'none', bg: 'gray.200' }} p={2} borderRadius="md">
+          Menus Quotidiens
+        </Link>
         <Link as={RouterLink} to="/admin/commandes" _hover={{ textDecor: 'none', bg: 'gray.200' }} p={2} borderRadius="md">
           Voir les Commandes
         </Link>

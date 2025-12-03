@@ -19,10 +19,11 @@ import AccountPage from './AccountPage.jsx' // <-- La page Compte
 
 // Composants Admin
 import AdminLayout from './AdminLayout.jsx'
-import AdminRoute from './AdminRoute.jsx' 
+import AdminRoute from './AdminRoute.jsx'
 import AdminDashboard from './AdminDashboard.jsx'
 import AdminMenusPage from './AdminMenusPage.jsx'
 import AdminEditMenuPage from './AdminEditMenuPage.jsx'
+import AdminDailyMenusPage from './AdminDailyMenusPage.jsx'
 import AdminOrdersPage from './AdminOrdersPage.jsx'
 
 const router = createBrowserRouter([
@@ -64,6 +65,7 @@ const router = createBrowserRouter([
               { path: '/admin', element: <AdminDashboard /> },
               { path: '/admin/menus', element: <AdminMenusPage /> },
               { path: '/admin/menus/:menuId', element: <AdminEditMenuPage /> },
+              { path: '/admin/menus-quotidiens', element: <AdminDailyMenusPage /> },
               { path: '/admin/commandes', element: <AdminOrdersPage /> }
             ]
           }

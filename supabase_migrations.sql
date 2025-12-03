@@ -174,3 +174,127 @@ AND table_name IN ('subscriptions', 'payments');
 SELECT schemaname, tablename, policyname, permissive, roles, cmd, qual
 FROM pg_policies
 WHERE tablename IN ('subscriptions', 'payments');
+
+-- =====================================================
+-- TABLE: daily_menus
+-- Menus quotidiens avec 2 choix de plats pour les abonnés
+-- =====================================================
+
+CREATE TABLE IF NOT EXISTS daily_menus (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+  -- Date du menu
+  menu_date DATE NOT NULL UNIQUE,
+
+  -- Les 2 choix de plats (références vers la table menus)
+  plat_1_id UUID REFERENCES menus(id) ON DELETE SET NULL,
+  plat_2_id UUID REFERENCES menus(id) ON DELETE SET NULL,
+
+  -- Statut de publication
+  is_active BOOLEAN DEFAULT FALSE,
+
+  -- Métadonnées
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL
+);
+
+-- Index pour performances
+CREATE INDEX IF NOT EXISTS idx_daily_menus_date ON daily_menus(menu_date);
+CREATE INDEX IF NOT EXISTS idx_daily_menus_active ON daily_menus(is_active);
+
+-- RLS (Row Level Security)
+ALTER TABLE daily_menus ENABLE ROW LEVEL SECURITY;
+
+-- Politique: Tous les utilisateurs authentifiés peuvent voir les menus actifs
+CREATE POLICY "Users can view active daily menus"
+  ON daily_menus FOR SELECT
+  USING (is_active = true OR auth.uid() IN (
+    SELECT id FROM auth.users WHERE raw_user_meta_data->>'role' = 'admin'
+  ));
+
+-- Politique: Seuls les admins peuvent créer/modifier
+CREATE POLICY "Admins can insert daily menus"
+  ON daily_menus FOR INSERT
+  WITH CHECK (auth.uid() IN (
+    SELECT id FROM auth.users WHERE raw_user_meta_data->>'role' = 'admin'
+  ));
+
+CREATE POLICY "Admins can update daily menus"
+  ON daily_menus FOR UPDATE
+  USING (auth.uid() IN (
+    SELECT id FROM auth.users WHERE raw_user_meta_data->>'role' = 'admin'
+  ));
+
+CREATE POLICY "Admins can delete daily menus"
+  ON daily_menus FOR DELETE
+  USING (auth.uid() IN (
+    SELECT id FROM auth.users WHERE raw_user_meta_data->>'role' = 'admin'
+  ));
+
+-- Trigger pour updated_at
+CREATE TRIGGER update_daily_menus_updated_at
+  BEFORE UPDATE ON daily_menus
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- =====================================================
+-- TABLE: subscriber_menu_selections
+-- Sélections quotidiennes des abonnés
+-- =====================================================
+
+CREATE TABLE IF NOT EXISTS subscriber_menu_selections (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+  -- Utilisateur abonné
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+
+  -- Menu quotidien
+  daily_menu_id UUID NOT NULL REFERENCES daily_menus(id) ON DELETE CASCADE,
+
+  -- Choix du plat (1 ou 2)
+  selected_plat_number INTEGER NOT NULL CHECK (selected_plat_number IN (1, 2)),
+
+  -- Date de sélection
+  selected_at TIMESTAMPTZ DEFAULT NOW(),
+
+  -- Contrainte: un utilisateur ne peut sélectionner qu'un seul plat par jour
+  UNIQUE(user_id, daily_menu_id)
+);
+
+-- Index pour performances
+CREATE INDEX IF NOT EXISTS idx_selections_user_id ON subscriber_menu_selections(user_id);
+CREATE INDEX IF NOT EXISTS idx_selections_daily_menu_id ON subscriber_menu_selections(daily_menu_id);
+CREATE INDEX IF NOT EXISTS idx_selections_date ON subscriber_menu_selections(selected_at);
+
+-- RLS (Row Level Security)
+ALTER TABLE subscriber_menu_selections ENABLE ROW LEVEL SECURITY;
+
+-- Politique: Les utilisateurs peuvent voir leurs propres sélections
+CREATE POLICY "Users can view own selections"
+  ON subscriber_menu_selections FOR SELECT
+  USING (auth.uid() = user_id);
+
+-- Politique: Les abonnés actifs peuvent insérer/mettre à jour leurs sélections
+CREATE POLICY "Subscribers can insert selections"
+  ON subscriber_menu_selections FOR INSERT
+  WITH CHECK (
+    auth.uid() = user_id
+    AND EXISTS (
+      SELECT 1 FROM subscriptions
+      WHERE user_id = auth.uid()
+      AND status IN ('active', 'trialing')
+    )
+  );
+
+CREATE POLICY "Subscribers can update own selections"
+  ON subscriber_menu_selections FOR UPDATE
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+-- Politique: Les admins peuvent tout voir
+CREATE POLICY "Admins can view all selections"
+  ON subscriber_menu_selections FOR SELECT
+  USING (auth.uid() IN (
+    SELECT id FROM auth.users WHERE raw_user_meta_data->>'role' = 'admin'
+  ));
