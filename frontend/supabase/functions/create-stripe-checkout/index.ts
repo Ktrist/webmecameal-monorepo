@@ -28,42 +28,71 @@ Deno.serve(async (req) => {
     })
 
     // 3. Récupération des données envoyées par React
-    const { cartItems, orderId } = await req.json()
+    const body = await req.json()
+    const { mode = 'payment', cartItems, orderId, priceId, planType, userId } = body
 
-    if (!cartItems || !orderId) {
-      throw new Error('Données manquantes (cartItems ou orderId)')
-    }
+    // 4. Création de la Session Stripe Checkout (différente selon le mode)
+    let session
 
-    // 4. Préparation des lignes pour Stripe
-    const line_items = cartItems.map((item: any) => {
-      // Sécurité : On s'assure que le prix est un nombre et on convertit en centimes
-      const unitAmount = Math.round(parseFloat(item.price) * 100)
-      
-      return {
-        price_data: {
-          currency: 'eur',
-          product_data: {
-            name: item.week_name,
-            // images: item.image_url ? [item.image_url] : [], // Optionnel
-          },
-          unit_amount: unitAmount,
-        },
-        quantity: item.quantity,
+    if (mode === 'subscription') {
+      // === MODE ABONNEMENT ===
+      if (!priceId || !planType || !userId) {
+        throw new Error('Données manquantes pour abonnement (priceId, planType, userId)')
       }
-    })
 
-    // 5. Création de la Session Stripe Checkout
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: line_items,
-      mode: 'payment',
-      // URLs de redirection (utilise APP_URL ou localhost:3000 par défaut)
-      success_url: `${appUrl}/commande/succes?order_id=${orderId}`,
-      cancel_url: `${appUrl}/checkout`,
-      metadata: {
-        supabase_order_id: orderId, // Très important pour le webhook plus tard
-      },
-    })
+      session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price: priceId, // On utilise directement le Price ID créé dans Stripe
+            quantity: 1,
+          },
+        ],
+        mode: 'subscription',
+        success_url: `${appUrl}/compte?subscription_success=true`,
+        cancel_url: `${appUrl}/abonnements`,
+        metadata: {
+          user_id: userId,
+          plan_type: planType,
+          mode: 'subscription',
+        },
+      })
+    } else {
+      // === MODE PAIEMENT PONCTUEL (existant) ===
+      if (!cartItems || !orderId) {
+        throw new Error('Données manquantes (cartItems ou orderId)')
+      }
+
+      // Préparation des lignes pour Stripe
+      const line_items = cartItems.map((item: any) => {
+        // Sécurité : On s'assure que le prix est un nombre et on convertit en centimes
+        const unitAmount = Math.round(parseFloat(item.price) * 100)
+
+        return {
+          price_data: {
+            currency: 'eur',
+            product_data: {
+              name: item.week_name,
+              // images: item.image_url ? [item.image_url] : [], // Optionnel
+            },
+            unit_amount: unitAmount,
+          },
+          quantity: item.quantity,
+        }
+      })
+
+      session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: line_items,
+        mode: 'payment',
+        success_url: `${appUrl}/commande/succes?order_id=${orderId}`,
+        cancel_url: `${appUrl}/checkout`,
+        metadata: {
+          supabase_order_id: orderId,
+          mode: 'payment',
+        },
+      })
+    }
 
     // 6. Réponse succès
     return new Response(

@@ -11,6 +11,7 @@ import Layout from './Layout.jsx'
 import DynamicPage from './DynamicPage.jsx' // <-- NOM CORRECT
 import MenuDetailPage from './MenuDetailPage.jsx'
 import PersonnalisationPage from './PersonnalisationPage.jsx'
+import SubscriptionPage from './SubscriptionPage.jsx'
 import AuthPage from './AuthPage.jsx'
 import CheckoutPage from './CheckoutPage.jsx'
 import OrderSuccessPage from './OrderSuccessPage.jsx'
@@ -35,11 +36,12 @@ const router = createBrowserRouter([
         children: [
           { path: '/', element: <DynamicPage /> },
           { path: '/commander/personnalisation', element: <PersonnalisationPage /> },
+          { path: '/abonnements', element: <SubscriptionPage /> },
           { path: '/:slug', element: <DynamicPage /> }, // <-- CORRECTION 2
           { path: '/menu/:menuId', element: <MenuDetailPage /> },
           { path: '/checkout', element: <CheckoutPage /> },
           { path: '/commande/succes', element: <OrderSuccessPage /> },
-          
+
           // C'EST ICI QUE DOIT ÊTRE LA ROUTE COMPTE
           // (Accessible aux users connectés, pas besoin d'être admin)
           { path: '/compte', element: <AccountPage /> }, 
