@@ -177,7 +177,7 @@ export default function CheckoutPage() {
   return (
     <Container maxW="container.lg" py={10}>
       <Heading mb={6}>Valider ma commande</Heading>
-      <HStack align="flex-start" spacing={10}>
+      <Stack direction={{ base: 'column', md: 'row' }} align="flex-start" spacing={10}>
         <VStack as="form" onSubmit={handleValidateOrder} spacing={4} align="stretch" flex={2}>
           
           <Heading size="md" mb={2}>1. Informations de Livraison</Heading>
@@ -185,25 +185,25 @@ export default function CheckoutPage() {
             Pré-rempli avec votre profil. Modifiez si vous commandez pour quelqu'un d'autre.
           </Text>
           
-          <HStack>
+          <Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
             {/* 5. CHAMPS MODIFIABLES (Plus de isReadOnly) */}
             <FormControl isRequired>
               <FormLabel>Prénom</FormLabel>
-              <Input 
-                value={firstName} 
-                onChange={(e) => setFirstName(e.target.value)} 
-                bg="white" 
+              <Input
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                bg="white"
               />
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Nom</FormLabel>
-              <Input 
-                value={lastName} 
-                onChange={(e) => setLastName(e.target.value)} 
-                bg="white" 
+              <Input
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                bg="white"
               />
             </FormControl>
-          </HStack>
+          </Stack>
 
           <FormControl isRequired>
             <FormLabel>Téléphone pour la livraison</FormLabel>
@@ -260,7 +260,14 @@ export default function CheckoutPage() {
           </Button>
         </VStack>
         
-        <Box flex={1} p={6} borderWidth="1px" borderRadius="lg" position="sticky" top={10}>
+        <Box
+          flex={1}
+          p={6}
+          borderWidth="1px"
+          borderRadius="lg"
+          position={{ base: 'relative', md: 'sticky' }}
+          top={{ base: 'auto', md: 10 }}
+        >
           <Heading size="md" mb={4}>Récapitulatif</Heading>
           <VStack spacing={4} align="stretch">
             {cartItems.map(item => (
@@ -276,7 +283,7 @@ export default function CheckoutPage() {
             </HStack>
           </VStack>
         </Box>
-      </HStack>
+      </Stack>
     </Container>
   )
 }
