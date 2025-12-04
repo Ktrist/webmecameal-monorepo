@@ -151,7 +151,7 @@ export default function Layout() {
                     Mon compte
                   </MenuButton>
                   <MenuList>
-                    <MenuItem as={RouterLink} to="/mes-menus" icon={<FiShoppingCart />}>
+                    <MenuItem as={RouterLink} to="/menus-semaine" icon={<FiShoppingCart />}>
                       Mes menus quotidiens
                     </MenuItem>
                     <MenuItem as={RouterLink} to="/compte" icon={<FiUser />}>
@@ -262,7 +262,7 @@ export default function Layout() {
               <Divider />
               {session ? (
                 <>
-                  <Button as={RouterLink} to="/mes-menus" leftIcon={<FiShoppingCart />} justifyContent="flex-start" variant="ghost" onClick={onMenuClose}>
+                  <Button as={RouterLink} to="/menus-semaine" leftIcon={<FiShoppingCart />} justifyContent="flex-start" variant="ghost" onClick={onMenuClose}>
                     Mes menus quotidiens
                   </Button>
                   <Button as={RouterLink} to="/compte" leftIcon={<FiUser />} justifyContent="flex-start" variant="ghost" onClick={onMenuClose}>

@@ -43,7 +43,7 @@ const router = createBrowserRouter([
           { path: '/test-stripe', element: <TestStripePage /> },
           { path: '/commander/personnalisation', element: <PersonnalisationPage /> },
           { path: '/abonnements', element: <SubscriptionPage /> },
-          { path: '/mes-menus', element: <DailyMenuSelectionPage /> },
+          { path: '/menus-semaine', element: <DailyMenuSelectionPage /> },
           { path: '/:slug', element: <DynamicPage /> }, // <-- CORRECTION 2
           { path: '/menu/:menuId', element: <MenuDetailPage /> },
           { path: '/checkout', element: <CheckoutPage /> },
