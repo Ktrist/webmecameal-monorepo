@@ -24,6 +24,10 @@ import { FiCheck, FiClock, FiCalendar } from 'react-icons/fi'
 import { STRIPE_PRICES } from './config'
 import { supabase } from './supabaseClient'
 
+// 🔥 DEBUG MODULE LOADING
+console.log('🔥 SubscriptionPage.jsx LOADED!')
+console.log('🔥 STRIPE_PRICES from config:', STRIPE_PRICES)
+
 // Plans d'abonnement
 const SUBSCRIPTION_PLANS = [
   {
