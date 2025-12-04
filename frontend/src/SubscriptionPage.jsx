@@ -37,7 +37,7 @@ const SUBSCRIPTION_PLANS = [
     pricePerDay: 12.90,
     frequency: 'semaine',
     daysPerWeek: 2,
-    stripePriceId: STRIPE_PRICES.HEBDO_2J,
+    stripePriceId: STRIPE_PRICES.HEBDO_2J || 'price_1SaC5xIHvDc7GYq5ItUTUVHU',
     features: [
       '2 repas par semaine',
       '12.90€ par repas',
@@ -56,7 +56,7 @@ const SUBSCRIPTION_PLANS = [
     pricePerDay: 11.90,
     frequency: 'semaine',
     daysPerWeek: 3,
-    stripePriceId: STRIPE_PRICES.HEBDO_3J,
+    stripePriceId: STRIPE_PRICES.HEBDO_3J || 'price_1SaC9XIHvDc7GYq5XbLGuZX0',
     features: [
       '3 repas par semaine',
       '11.90€ par repas',
@@ -76,7 +76,7 @@ const SUBSCRIPTION_PLANS = [
     pricePerDay: 10.90,
     frequency: 'semaine',
     daysPerWeek: 5,
-    stripePriceId: STRIPE_PRICES.HEBDO_5J,
+    stripePriceId: STRIPE_PRICES.HEBDO_5J || 'price_1SaCCbIHvDc7GYq5fcSaXlW6',
     features: [
       '5 repas par semaine',
       '10.90€ par repas',
@@ -97,7 +97,7 @@ const SUBSCRIPTION_PLANS = [
     priceMin: 10.00,
     frequency: 'mois',
     isFlexible: true,
-    stripePriceId: STRIPE_PRICES.MENSUEL,
+    stripePriceId: STRIPE_PRICES.MENSUEL || 'price_1SaCDxIHvDc7GYq5aqK8F3yE',
     features: [
       'À partir de 10€/mois',
       'Choisissez vos jours de livraison',
