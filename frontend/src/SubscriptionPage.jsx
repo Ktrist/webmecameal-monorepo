@@ -172,7 +172,12 @@ export default function SubscriptionPage() {
         },
       })
 
-      if (error) throw error
+      if (error) {
+        // Si l'erreur contient un message détaillé, l'afficher
+        const errorMessage = data?.error || error.message || 'Erreur inconnue'
+        console.error('❌ Edge Function error:', errorMessage)
+        throw new Error(errorMessage)
+      }
 
       if (data?.url) {
         // Rediriger vers Stripe Checkout
