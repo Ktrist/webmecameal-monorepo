@@ -67,9 +67,16 @@ export default function DailyMenuSelectionPage() {
 
       if (menusError) throw menusError
 
+      // Filtrer pour ne garder que les jours ouvrés (lundi à vendredi)
+      const weekdayMenus = menus?.filter(menu => {
+        const date = new Date(menu.menu_date + 'T00:00:00')
+        const dayOfWeek = date.getDay() // 0=Dimanche, 1=Lundi, ..., 6=Samedi
+        return dayOfWeek >= 1 && dayOfWeek <= 5 // Lundi (1) à Vendredi (5)
+      }) || []
+
       // Récupérer les sélections de l'utilisateur
-      if (user && menus && menus.length > 0) {
-        const menuIds = menus.map(m => m.id)
+      if (user && weekdayMenus && weekdayMenus.length > 0) {
+        const menuIds = weekdayMenus.map(m => m.id)
         const { data: selections, error: selectionsError } = await supabase
           .from('subscriber_menu_selections')
           .select('*')
@@ -86,7 +93,7 @@ export default function DailyMenuSelectionPage() {
         setUserSelections(selectionsMap)
       }
 
-      setDailyMenus(menus || [])
+      setDailyMenus(weekdayMenus)
     } catch (error) {
       toast({
         title: 'Erreur',
