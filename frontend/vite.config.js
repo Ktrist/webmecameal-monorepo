@@ -5,7 +5,13 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: '127.0.0.1', // On force l'IPv4 (c'est souvent la cause du bug sur Mac)
-    port: 3000,        // On change de port pour éviter les conflits cachés
+    host: '127.0.0.1',
+    port: 3000,
+    // Désactive le cache du navigateur en dev pour éviter les problèmes
+    headers: {
+      'Cache-Control': 'no-store',
+    },
   },
+  // Force le rechargement des variables d'environnement
+  envPrefix: 'VITE_',
 })
