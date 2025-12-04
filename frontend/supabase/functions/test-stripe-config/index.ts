@@ -54,10 +54,10 @@ Deno.serve(async (req) => {
 
     // Test 3: Check if specific Price IDs exist
     const priceIds = [
-      'price_1SaC5xIHvDc7GYq5ItUTUVHU', // HEBDO_2J
-      'price_1SaC9XIHvDc7GYq5XbLGuZX0', // HEBDO_3J
-      'price_1SaCCbIHvDc7GYq5fcSaXlW6', // HEBDO_5J
-      'price_1SaCDxIHvDc7GYq5aqK8F3yE', // MENSUEL
+      'price_1SabLCEx4HxCpNJ2hpgpHExI', // HEBDO_2J
+      'price_1SabMHEx4HxCpNJ2mDycvUW5', // HEBDO_3J
+      'price_1SabNQEx4HxCpNJ2fsciiPLU', // HEBDO_5J
+      'price_1SabNnEx4HxCpNJ26hfmuUmM', // MENSUEL
     ]
 
     const priceChecks = []
