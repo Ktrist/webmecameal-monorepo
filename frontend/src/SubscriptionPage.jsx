@@ -128,8 +128,14 @@ export default function SubscriptionPage() {
   console.log('🔍 DEBUG Plans:', SUBSCRIPTION_PLANS.map(p => ({ id: p.id, stripePriceId: p.stripePriceId })))
 
   const handleSubscribe = async (plan) => {
+    console.log('🚀 handleSubscribe called with plan:', plan)
+    console.log('🔑 plan.stripePriceId:', plan.stripePriceId)
+    console.log('👤 session:', session)
+    console.log('👤 user:', user)
+
     // Vérifier l'authentification
     if (!session || !user) {
+      console.log('❌ No session or user, redirecting to login')
       toast({
         title: 'Connexion requise',
         description: 'Veuillez vous connecter pour souscrire à un abonnement',
@@ -141,6 +147,7 @@ export default function SubscriptionPage() {
     }
 
     // Vérifier que le price ID est configuré
+    console.log('✅ Checking if stripePriceId exists:', !!plan.stripePriceId)
     if (!plan.stripePriceId) {
       toast({
         title: 'Configuration incomplète',
