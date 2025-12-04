@@ -38,9 +38,9 @@ const router = createBrowserRouter([
         element: <Layout />, 
         children: [
           { path: '/', element: <DynamicPage /> },
+          { path: '/test-env', element: <TestEnvPage /> },
           { path: '/commander/personnalisation', element: <PersonnalisationPage /> },
           { path: '/abonnements', element: <SubscriptionPage /> },
-          { path: '/test-env', element: <TestEnvPage /> },
           { path: '/mes-menus', element: <DailyMenuSelectionPage /> },
           { path: '/:slug', element: <DynamicPage /> }, // <-- CORRECTION 2
           { path: '/menu/:menuId', element: <MenuDetailPage /> },
