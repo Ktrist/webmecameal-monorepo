@@ -19,6 +19,10 @@ Deno.serve(async (req) => {
       throw new Error('La clé secrète Stripe (STRIPE_SECRET_KEY) est introuvable.')
     }
 
+    // 🔍 DEBUG: Log key format (without revealing the key)
+    console.log('🔑 Stripe key format:', stripeSecretKey.substring(0, 7) + '...')
+    console.log('🔑 Key is test mode:', stripeSecretKey.startsWith('sk_test_'))
+
     // URL de base de l'application (configurable via secrets Supabase)
     const appUrl = Deno.env.get('APP_URL') || 'http://localhost:3000'
 
@@ -30,6 +34,14 @@ Deno.serve(async (req) => {
     // 3. Récupération des données envoyées par React
     const body = await req.json()
     const { mode = 'payment', cartItems, orderId, priceId, planType, userId } = body
+
+    // 🔍 DEBUG: Log received parameters
+    console.log('📦 Request mode:', mode)
+    if (mode === 'subscription') {
+      console.log('💳 Price ID:', priceId)
+      console.log('📋 Plan type:', planType)
+      console.log('👤 User ID:', userId ? 'present' : 'missing')
+    }
 
     // 4. Création de la Session Stripe Checkout (différente selon le mode)
     let session
@@ -105,9 +117,20 @@ Deno.serve(async (req) => {
 
   } catch (error: any) {
     // 7. Gestion des erreurs
-    console.error('Erreur Stripe:', error.message)
+    console.error('❌ Erreur Stripe:', error.message)
+    console.error('❌ Error type:', error.type)
+    console.error('❌ Error code:', error.code)
+    console.error('❌ Full error:', JSON.stringify(error, null, 2))
+
+    // Extraire le message d'erreur le plus descriptif possible
+    const errorMessage = error.raw?.message || error.message || 'Erreur inconnue'
+
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({
+        error: errorMessage,
+        type: error.type,
+        code: error.code
+      }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 400
