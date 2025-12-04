@@ -181,10 +181,17 @@ export default function SubscriptionPage() {
         throw new Error('URL de paiement non reçue')
       }
     } catch (error) {
-      console.error('Erreur souscription:', error)
+      console.error('❌ Erreur souscription:', error)
+      console.error('❌ Error details:', {
+        message: error.message,
+        context: error.context,
+        details: error.details,
+        hint: error.hint,
+        code: error.code
+      })
       toast({
         title: 'Erreur',
-        description: error.message || 'Impossible de créer la session de paiement',
+        description: error.message || error.hint || 'Impossible de créer la session de paiement',
         status: 'error',
         duration: 5000,
       })
