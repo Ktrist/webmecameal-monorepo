@@ -173,8 +173,22 @@ export default function SubscriptionPage() {
       })
 
       if (error) {
-        // Si l'erreur contient un message détaillé, l'afficher
-        const errorMessage = data?.error || error.message || 'Erreur inconnue'
+        // Essayer de lire le corps de la réponse d'erreur
+        let errorMessage = error.message || 'Erreur inconnue'
+
+        // Si error.context est un Response object, parser le JSON
+        if (error.context && typeof error.context.json === 'function') {
+          try {
+            const errorData = await error.context.json()
+            errorMessage = errorData.error || errorMessage
+            console.error('❌ Edge Function error details:', errorData)
+          } catch (e) {
+            console.error('❌ Could not parse error response:', e)
+          }
+        } else if (data?.error) {
+          errorMessage = data.error
+        }
+
         console.error('❌ Edge Function error:', errorMessage)
         throw new Error(errorMessage)
       }
