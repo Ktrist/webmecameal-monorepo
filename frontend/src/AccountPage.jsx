@@ -490,52 +490,118 @@ export default function AccountPage() {
         </TabPanels>
       </Tabs>
 
-      {/* MODAL DE DÉTAIL */}
-      <Modal isOpen={isOpen} onClose={onClose} size={{ base: "full", md: "lg" }}>
+      {/* MODAL DE DÉTAIL AMÉLIORÉ */}
+      <Modal isOpen={isOpen} onClose={onClose} size={{ base: "full", md: "xl" }}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Commande #{selectedOrder?.id}</ModalHeader>
+          <ModalHeader>
+            <Flex justify="space-between" align="center">
+              <Box>
+                <Text>Commande #{selectedOrder?.id?.slice(0, 8)}</Text>
+                <Text fontSize="sm" fontWeight="normal" color="gray.500">
+                  {selectedOrder && new Date(selectedOrder.created_at).toLocaleDateString('fr-FR', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </Text>
+              </Box>
+              <Badge
+                colorScheme={
+                  selectedOrder?.status === 'paid' ? 'green' :
+                  selectedOrder?.status === 'pending' ? 'yellow' :
+                  'gray'
+                }
+                fontSize="md"
+                px={3}
+                py={1}
+                borderRadius="md"
+              >
+                {selectedOrder?.status === 'paid' ? '✓ Payée' :
+                 selectedOrder?.status === 'pending' ? '⏳ En attente' :
+                 selectedOrder?.status || 'Inconnue'}
+              </Badge>
+            </Flex>
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             {selectedOrder && (
-              <VStack align="stretch" spacing={4}>
-                <Box>
-                    <Text fontWeight="bold" color="gray.500" fontSize="sm">Livré à :</Text>
-                    <Text>{selectedOrder.shipping_name}</Text>
-                    <Text>{selectedOrder.shipping_address}</Text>
+              <VStack align="stretch" spacing={5}>
+                {/* Informations de livraison */}
+                <Box bg="gray.50" p={4} borderRadius="md" borderWidth="1px">
+                  <Text fontWeight="bold" fontSize="sm" color="gray.600" mb={2}>
+                    📍 Informations de livraison
+                  </Text>
+                  <Text fontWeight="semibold">{selectedOrder.shipping_name}</Text>
+                  <Text color="gray.600">{selectedOrder.shipping_address}</Text>
                 </Box>
-                <Divider />
+
+                {/* Articles commandés */}
                 <Box>
-                    <Text fontWeight="bold" color="gray.500" fontSize="sm" mb={2}>Articles :</Text>
+                  <Text fontWeight="bold" fontSize="sm" color="gray.600" mb={3}>
+                    🛒 Articles commandés
+                  </Text>
+                  <VStack align="stretch" spacing={2}>
                     {selectedOrder.order_items.map((item, idx) => (
-                        <Flex key={idx} justify="space-between" mb={2}>
-                            <Text>
-                                {item.quantity}x {item.menus?.week_name || "Menu supprimé"}
-                            </Text>
-                            <Text fontWeight="bold">
-                                {(item.unit_price * item.quantity).toFixed(2)} €
-                            </Text>
-                        </Flex>
+                      <Flex
+                        key={idx}
+                        justify="space-between"
+                        p={3}
+                        bg="white"
+                        borderWidth="1px"
+                        borderRadius="md"
+                        _hover={{ bg: 'gray.50' }}
+                      >
+                        <Box>
+                          <Text fontWeight="semibold">
+                            {item.menus?.week_name || "Menu supprimé"}
+                          </Text>
+                          <Text fontSize="sm" color="gray.500">
+                            Quantité : {item.quantity} × {item.unit_price.toFixed(2)} €
+                          </Text>
+                        </Box>
+                        <Text fontWeight="bold" color="brand.green">
+                          {(item.unit_price * item.quantity).toFixed(2)} €
+                        </Text>
+                      </Flex>
                     ))}
+                  </VStack>
                 </Box>
+
                 <Divider />
-                <Flex justify="space-between" align="center">
-                    <Text fontSize="lg" fontWeight="bold">Total payé</Text>
-                    <Text fontSize="xl" fontWeight="bold" color="brand.green">
-                        {selectedOrder.total_price} €
-                    </Text>
+
+                {/* Total */}
+                <Flex
+                  justify="space-between"
+                  align="center"
+                  p={4}
+                  bg="green.50"
+                  borderRadius="md"
+                  borderWidth="1px"
+                  borderColor="green.200"
+                >
+                  <Text fontSize="lg" fontWeight="bold">Total payé</Text>
+                  <Text fontSize="2xl" fontWeight="bold" color="brand.green">
+                    {selectedOrder.total_price} €
+                  </Text>
                 </Flex>
+
+                {/* Note si présente */}
                 {selectedOrder.comments && (
-                    <Box bg="yellow.50" p={3} borderRadius="md">
-                        <Text fontSize="sm" fontWeight="bold">Note :</Text>
-                        <Text fontSize="sm">{selectedOrder.comments}</Text>
-                    </Box>
+                  <Box bg="blue.50" p={4} borderRadius="md" borderWidth="1px" borderColor="blue.200">
+                    <Text fontSize="sm" fontWeight="bold" color="blue.800" mb={1}>
+                      💬 Note de commande :
+                    </Text>
+                    <Text fontSize="sm" color="blue.900">{selectedOrder.comments}</Text>
+                  </Box>
                 )}
               </VStack>
             )}
           </ModalBody>
-          <ModalFooter>
-            <Button onClick={onClose}>Fermer</Button>
+          <ModalFooter bg="gray.50">
+            <Button colorScheme="teal" onClick={onClose}>Fermer</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
