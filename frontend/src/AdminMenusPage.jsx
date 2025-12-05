@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react' // <-- L'IMPORT MANQUANT ÉTAIT ICI
 import { supabase } from './supabaseClient'
-import { 
-  Container, Heading, VStack, FormControl, FormLabel, Input, 
+import {
+  Container, Heading, VStack, FormControl, FormLabel, Input,
   NumberInput, NumberInputField, Button, useToast, Text,
-  Box, Spinner, Center, Table, Thead, Tbody, Tr, Th, Td, 
+  Box, Spinner, Center, Table, Thead, Tbody, Tr, Th, Td,
   TableContainer, IconButton, HStack
 } from '@chakra-ui/react'
-import { FaTrash } from 'react-icons/fa'
+import { FaTrash, FaEdit } from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom'
 
-// Composant Liste (inchangé)
-function MenuList({ menus, onDelete }) {
+// Composant Liste avec bouton Modifier
+function MenuList({ menus, onDelete, onEdit }) {
   return (
     <Box mt={12}>
       <Heading size="lg" mb={4}>Menus Existants</Heading>
@@ -35,6 +36,13 @@ function MenuList({ menus, onDelete }) {
                 <Td>
                   <HStack spacing={2}>
                     <IconButton
+                      icon={<FaEdit />}
+                      colorScheme="blue"
+                      size="sm"
+                      onClick={() => onEdit(menu.id)}
+                      aria-label="Modifier"
+                    />
+                    <IconButton
                       icon={<FaTrash />}
                       colorScheme="red"
                       size="sm"
@@ -54,8 +62,9 @@ function MenuList({ menus, onDelete }) {
 
 export default function AdminMenusPage() {
   const toast = useToast()
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
-  
+
   // États Simplifiés (Architecture Pro : on gère le reste dans Strapi)
   const [weekName, setWeekName] = useState('')
   const [price, setPrice] = useState('0.00')
@@ -114,6 +123,11 @@ export default function AdminMenusPage() {
     }
   }
 
+  // Modification
+  const handleEdit = (menuId) => {
+    navigate(`/admin/menus/${menuId}`)
+  }
+
   // Suppression
   const handleDelete = async (menuId) => {
     if (window.confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) {
@@ -160,7 +174,7 @@ export default function AdminMenusPage() {
       {listLoading ? (
         <Center mt={12}><Spinner /></Center>
       ) : (
-        <MenuList menus={menus} onDelete={handleDelete} />
+        <MenuList menus={menus} onDelete={handleDelete} onEdit={handleEdit} />
       )}
     </Container>
   )
