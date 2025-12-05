@@ -491,7 +491,7 @@ export default function AccountPage() {
       </Tabs>
 
       {/* MODAL DE DÉTAIL */}
-      <Modal isOpen={isOpen} onClose={onClose} size="lg">
+      <Modal isOpen={isOpen} onClose={onClose} size={{ base: "full", md: "lg" }}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Commande #{selectedOrder?.id}</ModalHeader>

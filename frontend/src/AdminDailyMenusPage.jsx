@@ -319,7 +319,7 @@ export default function AdminDailyMenusPage() {
       )}
 
       {/* Modal Création/Édition */}
-      <Modal isOpen={isOpen} onClose={onClose} size="xl">
+      <Modal isOpen={isOpen} onClose={onClose} size={{ base: "full", md: "xl" }}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>

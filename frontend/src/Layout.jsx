@@ -295,7 +295,7 @@ export default function Layout() {
       <Box bg="gray.50" color="gray.600" mt={20}>
         <Container maxW="container.lg" py={10}>
           <VStack spacing={6}>
-            <HStack spacing={8} flexWrap="wrap" justify="center">
+            <HStack spacing={{ base: 4, md: 8 }} flexWrap="wrap" justify="center">
               <Link
                 as={RouterLink}
                 to="/mentions-legales"
@@ -329,7 +329,7 @@ export default function Layout() {
       </Box>
 
       {/* --- MODAL PANIER (Aperçu avant Checkout) --- */}
-      <Modal isOpen={isCartOpen} onClose={onCartClose} size="lg" scrollBehavior="inside">
+      <Modal isOpen={isCartOpen} onClose={onCartClose} size={{ base: "full", md: "lg" }} scrollBehavior="inside">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Votre Panier</ModalHeader>
