@@ -16,6 +16,7 @@ import DailyMenuSelectionPage from './DailyMenuSelectionPage.jsx'
 import TestEnvPage from './TestEnvPage.jsx'
 import TestStripePage from './TestStripePage.jsx'
 import AuthPage from './AuthPage.jsx'
+import ResetPasswordPage from './ResetPasswordPage.jsx'
 import CheckoutPage from './CheckoutPage.jsx'
 import OrderSuccessPage from './OrderSuccessPage.jsx'
 import AccountPage from './AccountPage.jsx' // <-- La page Compte
@@ -60,7 +61,11 @@ const router = createBrowserRouter([
         path: '/login',
         element: <AuthPage />,
       },
-      
+      {
+        path: '/reset-password',
+        element: <ResetPasswordPage />,
+      },
+
       // === ZONE ADMIN (Protégée par le rôle 'admin') ===
       {
         element: <AdminRoute />, 
