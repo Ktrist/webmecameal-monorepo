@@ -1,0 +1,36 @@
+ID,Titre,Description,Statut,Priorité,Sprint,Estimation,Notes
+US-001,Abonnements Stripe,En tant que Client je veux m'abonner à Hebdo ou Mensuel,✅ TERMINÉ,P0,Sprint 1,3j,Stripe configuré
+US-002,Menus quotidiens,En tant que Client abonné je choisis parmi 2 plats chaque jour,✅ TERMINÉ,P0,Sprint 1,2j,Lundi-Vendredi uniquement
+US-003,Page compte,En tant que Client je vois mon profil et historique,✅ TERMINÉ,P0,Sprint 1,1j,/compte fonctionnel
+US-004,Code postal,En tant que Client je vérifie si mon code postal est livrable,✅ TERMINÉ,P0,Sprint 1,0.5j,74xxx configurés
+US-005,Plans Stripe,En tant qu'Admin je configure les plans Stripe,✅ TERMINÉ,P0,Sprint 1,1j,Dashboard Stripe
+US-006,Rôle admin,En tant qu'Admin j'ai un rôle admin dans Supabase,✅ TERMINÉ,P0,Sprint 1,0.5j,RLS policies
+US-007,Gestion abonnement,En tant que Client je gère mon abonnement,✅ TERMINÉ,P0,Sprint 1,2j,Pause/Arrêt fonctionnel
+US-008,Responsive mobile,En tant qu'Utilisateur le site est 100% responsive,✅ TERMINÉ,P0,Sprint 1,2j,Audit complet fait
+US-019,Détail commande,En tant que Client je vois le détail d'une commande,✅ TERMINÉ,P1,Sprint 1,1j,Modal amélioré
+US-020,Fiche recette,En tant qu'Admin /menu/:id affiche recipe_details,✅ TERMINÉ,P1,Sprint 1,2j,Supabase + Strapi
+US-021,Pages légales,En tant qu'Utilisateur j'accède aux pages statiques,✅ TERMINÉ,P0,Sprint 1,1j,Mentions CGV RGPD
+US-022,Admin menus quotidiens,En tant qu'Admin je gère les plats du jour,✅ TERMINÉ,P0,Sprint 1,2j,Interface admin
+US-025,Débits auto,En tant que Client je suis débité automatiquement,✅ TERMINÉ,P0,Sprint 1,1j,Webhook Stripe
+US-029,Mot de passe oublié,Lien mot de passe oublié sur /login,✅ TERMINÉ,P1,Sprint 1,1j,Reset password flow
+US-031,Allergènes,En tant que Client je consulte les allergènes,✅ TERMINÉ,P0,Sprint 1,2j,UE 1169/2011
+US-009,Oneshot personnalisé,En tant que Client je personnalise ma première commande,🟡 TODO,P1,Sprint 3,3j,Portions plats 15€ base
+US-024,Emails confirmation,En tant que Client je reçois des emails de confirmation,🟡 EN COURS,P0,Sprint 2,2j,Resend/SendGrid
+US-030,Email hebdo menu,En tant que Client je reçois le menu chaque semaine,🟡 EN COURS,P1,Sprint 2,2j,Email service requis
+US-032,Flat design,Uniformiser le site en flat design,🟡 EN COURS,P1,Sprint 2,3j,Chaque partie du site
+US-033,Bandeau promo,Bandeau code promo -10% première commande,🟡 TODO,P2,Sprint 2,1j,Système codes promo
+US-034,Admin commandes,Page /admin/commandes avec tableau,🟡 TODO,P1,Sprint 2,2j,Tableau filtrable
+US-035,Statut commande,Changer statut commande depuis admin,🟡 TODO,P1,Sprint 2,1j,Pending Paid Delivered
+US-036,Filtres commandes,Filtrer commandes par ID Date,🟡 TODO,P2,Sprint 2,1j,Search & filters
+US-037,Historique commandes,Onglet Historique pour commandes livrées,🟡 TODO,P2,Sprint 2,0.5j,Tabs organization
+US-038,Email rappel mardi,Email automatique rappel tous les mardis,🟡 TODO,P1,Sprint 2,2j,Cron + Resend
+US-039,Lien magique email,Lien direct menu dans email rappel,🟡 TODO,P2,Sprint 2,1j,Magic link generation
+US-040,Options menu,Ajouter options menu (boisson dessert),🔴 TODO,P2,Sprint 3,2j,Extra products
+US-041,Prix dégressif,Portions dégressives base 15€,🔴 TODO,P2,Sprint 3,2j,Pricing logic
+US-042,CRM HubSpot,Connecter inscriptions à HubSpot,🔴 TODO,P3,Sprint 3,3j,API integration
+US-043,Parrainage,Système parrainage avec réductions,🔴 TODO,P3,Sprint 3,3j,Referral system
+US-044,Offre B2B,Offre B2B pour entreprises,🔴 TODO,P3,Sprint 4,5j,Corporate plans
+US-045,App mobile,Application mobile dédiée,🔴 TODO,P3,Sprint 5,20j,React Native/Flutter
+US-046,Tests auto,Tests CTA et parcours automatisés,🔴 TODO,P2,Sprint 3,5j,Cypress/Playwright
+US-047,Refacto code,Refactorisation complète du code,🔴 TODO,P2,Sprint 4,5j,Code quality
+US-048,Rapport erreurs,Système rapport erreurs automatique,🔴 TODO,P2,Sprint 3,2j,Error tracking
