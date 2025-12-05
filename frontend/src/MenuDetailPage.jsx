@@ -5,9 +5,27 @@ import { useCart } from './CartContext'
 import {
   Box, Button, Container, Heading, Text, Spinner, VStack,
   Image, Breadcrumb, BreadcrumbItem, BreadcrumbLink, useToast,
-  Flex, Divider
+  Flex, Divider, Badge, Wrap, WrapItem, Alert, AlertIcon
 } from '@chakra-ui/react'
 import { STRAPI_URL } from './config'
+
+// Labels des allergènes pour l'affichage
+const ALLERGEN_LABELS = {
+  gluten: 'Gluten',
+  crustaces: 'Crustacés',
+  oeufs: 'Œufs',
+  poissons: 'Poissons',
+  arachides: 'Arachides',
+  soja: 'Soja',
+  lait: 'Lait',
+  fruits_coque: 'Fruits à coque',
+  celeri: 'Céleri',
+  moutarde: 'Moutarde',
+  sesame: 'Sésame',
+  sulfites: 'Sulfites',
+  lupin: 'Lupin',
+  mollusques: 'Mollusques'
+}
 
 export default function MenuDetailPage() {
   const { menuId } = useParams()
@@ -133,6 +151,25 @@ export default function MenuDetailPage() {
           <Text fontSize="xl" color="gray.600">
             {menu.description}
           </Text>
+
+          {/* Allergènes */}
+          {menu.allergens && menu.allergens.length > 0 && (
+            <Alert status="warning" variant="left-accent" borderRadius="md">
+              <AlertIcon />
+              <Box>
+                <Text fontWeight="bold" mb={2}>Allergènes présents :</Text>
+                <Wrap spacing={2}>
+                  {menu.allergens.map(allergen => (
+                    <WrapItem key={allergen}>
+                      <Badge colorScheme="orange" fontSize="sm" px={3} py={1}>
+                        {ALLERGEN_LABELS[allergen] || allergen}
+                      </Badge>
+                    </WrapItem>
+                  ))}
+                </Wrap>
+              </Box>
+            </Alert>
+          )}
 
           <Divider />
 

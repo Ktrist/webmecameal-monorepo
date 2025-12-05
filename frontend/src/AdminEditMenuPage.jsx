@@ -3,9 +3,27 @@ import { supabase } from './supabaseClient'
 import {
   Container, Heading, VStack, FormControl, FormLabel, Input,
   Textarea, NumberInput, NumberInputField, Button, useToast,
-  Spinner, Center, Text, Image, Box
+  Spinner, Center, Text, Image, Box, Checkbox, Wrap, WrapItem
 } from '@chakra-ui/react'
 import { useParams, useNavigate } from 'react-router-dom' // Pour lire l'ID de l'URL
+
+// Liste des allergènes selon règlement UE 1169/2011
+const ALLERGENS_LIST = [
+  { id: 'gluten', label: 'Gluten (céréales)' },
+  { id: 'crustaces', label: 'Crustacés' },
+  { id: 'oeufs', label: 'Œufs' },
+  { id: 'poissons', label: 'Poissons' },
+  { id: 'arachides', label: 'Arachides' },
+  { id: 'soja', label: 'Soja' },
+  { id: 'lait', label: 'Lait' },
+  { id: 'fruits_coque', label: 'Fruits à coque' },
+  { id: 'celeri', label: 'Céleri' },
+  { id: 'moutarde', label: 'Moutarde' },
+  { id: 'sesame', label: 'Graines de sésame' },
+  { id: 'sulfites', label: 'Sulfites' },
+  { id: 'lupin', label: 'Lupin' },
+  { id: 'mollusques', label: 'Mollusques' }
+]
 
 export default function AdminEditMenuPage() {
   const { menuId } = useParams() // Récupère le 'menuId' de l'URL
@@ -19,6 +37,7 @@ export default function AdminEditMenuPage() {
   const [weekName, setWeekName] = useState('')
   const [description, setDescription] = useState('')
   const [recipeDetails, setRecipeDetails] = useState('')
+  const [allergens, setAllergens] = useState([])
   const [price, setPrice] = useState('0.00')
   const [imageFile, setImageFile] = useState(null)
   const [existingImageUrl, setExistingImageUrl] = useState('')
@@ -42,6 +61,7 @@ export default function AdminEditMenuPage() {
         setWeekName(data.week_name)
         setDescription(data.description)
         setRecipeDetails(data.recipe_details || '')
+        setAllergens(data.allergens || [])
         setPrice(data.price.toString())
         setExistingImageUrl(data.image_url)
 
@@ -60,6 +80,16 @@ export default function AdminEditMenuPage() {
       setImageFile(e.target.files[0])
       setExistingImageUrl('') // On cache l'ancienne image
     }
+  }
+
+  const handleAllergenToggle = (allergenId) => {
+    setAllergens(prev => {
+      if (prev.includes(allergenId)) {
+        return prev.filter(id => id !== allergenId)
+      } else {
+        return [...prev, allergenId]
+      }
+    })
   }
 
   // 2. Logique de MISE A JOUR
@@ -97,6 +127,7 @@ export default function AdminEditMenuPage() {
           week_name: weekName,
           description: description,
           recipe_details: recipeDetails,
+          allergens: allergens,
           price: parseFloat(price),
           image_url: finalImageUrl
         })
@@ -151,6 +182,26 @@ export default function AdminEditMenuPage() {
             <Text fontSize="xs" color="gray.500" mt={1}>
               Vous pouvez utiliser du HTML pour formater la recette (h2, ul, ol, li, p, strong, em)
             </Text>
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>Allergènes présents</FormLabel>
+            <Text fontSize="xs" color="gray.500" mb={3}>
+              Cochez tous les allergènes présents dans ce plat (règlement UE 1169/2011)
+            </Text>
+            <Wrap spacing={3}>
+              {ALLERGENS_LIST.map(allergen => (
+                <WrapItem key={allergen.id}>
+                  <Checkbox
+                    isChecked={allergens.includes(allergen.id)}
+                    onChange={() => handleAllergenToggle(allergen.id)}
+                    colorScheme="orange"
+                  >
+                    {allergen.label}
+                  </Checkbox>
+                </WrapItem>
+              ))}
+            </Wrap>
           </FormControl>
 
           <FormControl isRequired>
