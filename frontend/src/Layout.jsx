@@ -293,8 +293,38 @@ export default function Layout() {
 
       {/* --- FOOTER --- */}
       <Box bg="gray.50" color="gray.600" mt={20}>
-        <Container maxW="container.lg" py={10} textAlign="center">
-          <Text>© 2025 Webmecameal. Tous droits réservés.</Text>
+        <Container maxW="container.lg" py={10}>
+          <VStack spacing={6}>
+            <HStack spacing={8} flexWrap="wrap" justify="center">
+              <Link
+                as={RouterLink}
+                to="/mentions-legales"
+                fontSize="sm"
+                _hover={{ color: 'brand.green', textDecoration: 'underline' }}
+              >
+                Mentions légales
+              </Link>
+              <Link
+                as={RouterLink}
+                to="/cgv"
+                fontSize="sm"
+                _hover={{ color: 'brand.green', textDecoration: 'underline' }}
+              >
+                CGV
+              </Link>
+              <Link
+                as={RouterLink}
+                to="/politique-confidentialite"
+                fontSize="sm"
+                _hover={{ color: 'brand.green', textDecoration: 'underline' }}
+              >
+                Politique de confidentialité
+              </Link>
+            </HStack>
+            <Text fontSize="sm" textAlign="center">
+              © 2025 Webmecameal. Tous droits réservés.
+            </Text>
+          </VStack>
         </Container>
       </Box>
 

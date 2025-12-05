@@ -20,6 +20,9 @@ import ResetPasswordPage from './ResetPasswordPage.jsx'
 import CheckoutPage from './CheckoutPage.jsx'
 import OrderSuccessPage from './OrderSuccessPage.jsx'
 import AccountPage from './AccountPage.jsx' // <-- La page Compte
+import LegalNoticePage from './LegalNoticePage.jsx'
+import TermsOfSalePage from './TermsOfSalePage.jsx'
+import PrivacyPolicyPage from './PrivacyPolicyPage.jsx'
 
 // Composants Admin
 import AdminLayout from './AdminLayout.jsx'
@@ -53,6 +56,11 @@ const router = createBrowserRouter([
           // C'EST ICI QUE DOIT ÊTRE LA ROUTE COMPTE
           // (Accessible aux users connectés, pas besoin d'être admin)
           { path: '/compte', element: <AccountPage /> },
+
+          // Pages légales
+          { path: '/mentions-legales', element: <LegalNoticePage /> },
+          { path: '/cgv', element: <TermsOfSalePage /> },
+          { path: '/politique-confidentialite', element: <PrivacyPolicyPage /> },
         ]
       },
       
