@@ -18,6 +18,7 @@ export default function AdminEditMenuPage() {
   // États pour les champs du formulaire
   const [weekName, setWeekName] = useState('')
   const [description, setDescription] = useState('')
+  const [recipeDetails, setRecipeDetails] = useState('')
   const [price, setPrice] = useState('0.00')
   const [imageFile, setImageFile] = useState(null)
   const [existingImageUrl, setExistingImageUrl] = useState('')
@@ -40,6 +41,7 @@ export default function AdminEditMenuPage() {
         setMenu(data)
         setWeekName(data.week_name)
         setDescription(data.description)
+        setRecipeDetails(data.recipe_details || '')
         setPrice(data.price.toString())
         setExistingImageUrl(data.image_url)
 
@@ -94,6 +96,7 @@ export default function AdminEditMenuPage() {
         .update({
           week_name: weekName,
           description: description,
+          recipe_details: recipeDetails,
           price: parseFloat(price),
           image_url: finalImageUrl
         })
@@ -133,6 +136,21 @@ export default function AdminEditMenuPage() {
           <FormControl isRequired>
             <FormLabel>Description</FormLabel>
             <Textarea value={description} onChange={(e) => setDescription(e.target.value)} />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>Détails de la recette (HTML)</FormLabel>
+            <Textarea
+              value={recipeDetails}
+              onChange={(e) => setRecipeDetails(e.target.value)}
+              placeholder="<h2>Ingrédients</h2><ul><li>...</li></ul><h2>Préparation</h2><ol><li>...</li></ol>"
+              minH="200px"
+              fontFamily="monospace"
+              fontSize="sm"
+            />
+            <Text fontSize="xs" color="gray.500" mt={1}>
+              Vous pouvez utiliser du HTML pour formater la recette (h2, ul, ol, li, p, strong, em)
+            </Text>
           </FormControl>
 
           <FormControl isRequired>
