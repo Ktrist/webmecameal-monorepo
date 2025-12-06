@@ -5,7 +5,7 @@ import { useOutletContext, useNavigate } from 'react-router-dom'
 import {
   Container, Heading, VStack, FormControl, FormLabel, Input,
   Textarea, Button, useToast, Spinner, Center, Text,
-  Box, HStack, Divider, Radio, RadioGroup, Stack
+  Box, HStack, Divider, Radio, RadioGroup, Stack, Flex
 } from '@chakra-ui/react'
 import { isDeliverable } from './utils/deliveryZones'
 
