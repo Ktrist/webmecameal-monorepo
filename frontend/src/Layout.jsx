@@ -13,6 +13,7 @@ import { FaMinus, FaPlus, FaTrash } from 'react-icons/fa'
 import { useCart } from './CartContext'
 import { supabase } from './supabaseClient'
 import { STRAPI_URL } from './config'
+import PromoBar from './components/PromoBar'
 
 export default function Layout() {
   // 1. Récupération des contextes
@@ -59,6 +60,9 @@ export default function Layout() {
   return (
     <Box display="flex" flexDirection="column" minH="100vh">
       
+      {/* --- PROMO BANNER --- */}
+      <PromoBar />
+
       {/* --- HEADER STYLE QUITOQUE --- */}
       <Box shadow="sm" borderBottomWidth="1px" borderColor="gray.200" position="sticky" top={0} zIndex={10} bg="white">
         <Container maxW="container.xl">

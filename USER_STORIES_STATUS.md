@@ -27,14 +27,12 @@
 ### Pages & UX
 - [x] US-008: Responsive mobile
 - [x] US-021: Pages légales (Mentions, CGV, RGPD)
+- [x] US-032: Uniformisation flat design
+- [x] US-033: Bandeau code promo -10% première commande
 
 ---
 
 ## 🟡 EN COURS (Sprint 2)
-
-### Design & UX
-- [ ] US-032: Uniformisation flat design
-- [ ] US-033: Bandeau code promo -10% première commande
 
 ### Admin Features
 - [ ] US-034: Page /admin/commandes (tableau)
@@ -75,18 +73,18 @@
 ## 📈 Statistiques
 
 - **Total US:** 48
-- **Terminées:** 14 (29%)
-- **En cours:** 11 (23%)
+- **Terminées:** 16 (33%)
+- **En cours:** 9 (19%)
 - **À faire:** 23 (48%)
 
 ---
 
 ## 🎯 Prochaines priorités immédiates
 
-1. **US-032**: Uniformisation flat design (en cours)
-2. **US-033**: Bandeau promo
-3. **US-034**: Page admin commandes
-4. **US-024**: Emails confirmation
+1. **US-034**: Page admin commandes
+2. **US-035**: Changement statut commande
+3. **US-024**: Emails confirmation
+4. **US-030**: Email hebdomadaire menu
 
 ---
 
