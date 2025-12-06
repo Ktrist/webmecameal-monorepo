@@ -29,16 +29,14 @@
 - [x] US-021: Pages légales (Mentions, CGV, RGPD)
 - [x] US-032: Uniformisation flat design
 - [x] US-033: Bandeau code promo -10% première commande
+- [x] US-034: Page /admin/commandes (tableau)
+- [x] US-035: Changement statut commande
+- [x] US-036: Filtres commandes (ID, Date)
+- [x] US-037: Onglet "Historique" commandes livrées
 
 ---
 
 ## 🟡 EN COURS (Sprint 2)
-
-### Admin Features
-- [ ] US-034: Page /admin/commandes (tableau)
-- [ ] US-035: Changement statut commande
-- [ ] US-036: Filtres commandes (ID, Date)
-- [ ] US-037: Onglet "Historique" commandes livrées
 
 ### Emails & Notifications
 - [ ] US-024: Emails confirmation (inscription, commande)
@@ -73,18 +71,18 @@
 ## 📈 Statistiques
 
 - **Total US:** 48
-- **Terminées:** 16 (33%)
-- **En cours:** 9 (19%)
+- **Terminées:** 20 (42%)
+- **En cours:** 5 (10%)
 - **À faire:** 23 (48%)
 
 ---
 
 ## 🎯 Prochaines priorités immédiates
 
-1. **US-034**: Page admin commandes
-2. **US-035**: Changement statut commande
-3. **US-024**: Emails confirmation
-4. **US-030**: Email hebdomadaire menu
+1. **US-024**: Emails confirmation (inscription, commande)
+2. **US-030**: Email hebdomadaire menu
+3. **US-038**: Email rappel mardi (Cron + Resend)
+4. **US-009**: Personnalisation première commande oneshot
 
 ---
 
