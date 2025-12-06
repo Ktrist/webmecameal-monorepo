@@ -20,7 +20,9 @@ export default function PromoBar() {
       bg="linear-gradient(135deg, #DD6B20 0%, #FF8C42 100%)"
       color="white"
       py={3}
-      position="relative"
+      position="sticky"
+      top={0}
+      zIndex={20}
       boxShadow="sm"
       sx={{
         '@keyframes slideDown': {
