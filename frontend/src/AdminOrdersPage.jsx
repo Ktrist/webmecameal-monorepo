@@ -98,7 +98,7 @@ function OrderDetailModal({ order, isOpen, onClose }) {
         <ModalHeader>
           <Flex justify="space-between" align="center">
             <Box>
-              <Text>Commande #{order.id.slice(0, 8)}</Text>
+              <Text>Commande #{order.id}</Text>
               <Text fontSize="sm" fontWeight="normal" color="gray.500">
                 {new Date(order.created_at).toLocaleDateString('fr-FR', {
                   day: 'numeric',
@@ -255,7 +255,7 @@ function OrdersTable({ orders, onStatusChange, onViewDetails }) {
             <Tr key={order.id} _hover={{ bg: 'gray.50' }}>
               <Td>
                 <Badge colorScheme="gray" fontSize="xs">
-                  #{order.id.slice(0, 8)}
+                  #{order.id}
                 </Badge>
               </Td>
               <Td>
