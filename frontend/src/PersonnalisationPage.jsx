@@ -124,8 +124,18 @@ export default function PersonnalisationPage() {
 
     // Ajout au panier
     selectedRecipes.forEach(recipe => {
+      if (!recipe.supabase_menu_id) {
+        console.error('Recipe missing supabase_menu_id:', recipe)
+        toast({
+          title: 'Erreur',
+          description: `Le menu "${recipe.titre}" n'est pas correctement configuré`,
+          status: 'error',
+          duration: 4000
+        })
+        return
+      }
       addToCart({
-        id: recipe.supabase_menu_id || recipe.documentId,
+        id: recipe.supabase_menu_id,
         week_name: recipe.titre,
         price: PRICING[parseInt(nbPlats)],
         quantity: parseInt(portions)
