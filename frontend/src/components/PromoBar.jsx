@@ -1,11 +1,6 @@
 import { useState } from 'react'
-import { Box, Container, Text, Flex, IconButton, keyframes } from '@chakra-ui/react'
+import { Box, Container, Text, Flex, IconButton } from '@chakra-ui/react'
 import { FiX } from 'react-icons/fi'
-
-const slideDown = keyframes`
-  from { transform: translateY(-100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-`
 
 export default function PromoBar() {
   const [isVisible, setIsVisible] = useState(() => {
@@ -26,8 +21,14 @@ export default function PromoBar() {
       color="white"
       py={3}
       position="relative"
-      animation={`${slideDown} 0.4s ease-out`}
       boxShadow="sm"
+      sx={{
+        '@keyframes slideDown': {
+          from: { transform: 'translateY(-100%)', opacity: 0 },
+          to: { transform: 'translateY(0)', opacity: 1 }
+        },
+        animation: 'slideDown 0.4s ease-out'
+      }}
     >
       <Container maxW="container.xl">
         <Flex alignItems="center" justifyContent="center" gap={2}>
