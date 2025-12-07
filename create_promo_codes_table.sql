@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS promo_code_usage (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   promo_code_id UUID NOT NULL REFERENCES promo_codes(id) ON DELETE CASCADE,
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  order_id UUID REFERENCES orders(id) ON DELETE SET NULL,
+  order_id BIGINT REFERENCES orders(id) ON DELETE SET NULL,
   discount_applied DECIMAL(10, 2) NOT NULL,
   used_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   UNIQUE(promo_code_id, order_id)
