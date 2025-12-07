@@ -356,7 +356,7 @@ export default function AdminOrdersPage() {
       let filteredData = data
       if (filterId) {
         filteredData = filteredData.filter(order =>
-          order.id.toLowerCase().includes(filterId.toLowerCase())
+          String(order.id).includes(filterId)
         )
       }
       if (filterDate) {
